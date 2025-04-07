@@ -10,5 +10,7 @@ namespace Intex.Data
         }
 
         public DbSet<movies_rating> MoviesRatings { get; set; }
+        public DbSet<movies_user> Movies_Users { get; set; }
+        public DbSet<movie_title> MovieTitles { get; set; }
     }
 }

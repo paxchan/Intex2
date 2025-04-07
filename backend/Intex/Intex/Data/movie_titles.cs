@@ -3,7 +3,7 @@ using Microsoft.Build.ObjectModelRemoting;
 
 namespace Intex.Data
 {
-    public class movie_titles
+    public class movie_title
     {
         public string show_id { get; set; }
         public string type { get; set; }

@@ -2,7 +2,7 @@
 
 namespace Intex.Data
 {
-    public class movies_users
+    public class movies_user
     {
         public int user_id { get; set; }
         public string name { get; set; }
