@@ -8,8 +8,11 @@
 }
 
 .home-content {
-  max-width: 1440px;
-  margin: 0 auto;
+  width: 98%;
+  max-width: 1920px; /* TVs often go up to 1920px or more */
+  margin: 0;
+  padding: 0 32px;
+  box-sizing: border-box;
 }
 
 /* Navigation */
@@ -26,8 +29,8 @@
 }
 
 .logo {
-  width: 198px;
-  height: 56px;
+  height: 3rem;
+  object-fit: contain;
 }
 
 .nav-links {
@@ -37,7 +40,7 @@
 }
 
 .nav-link {
-  font-size: 13px;
+  font-size: 18px;
   color: white;
   text-decoration: none;
   padding: 4px 12px;
@@ -76,7 +79,7 @@
   height: 349px;
   border-radius: 15px;
   background-color: #1c1c1c;
-  margin-bottom: 24px;
+  margin-bottom: 12px;
   position: relative;
   display: flex;
   align-items: center;
@@ -88,6 +91,14 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
+}
+
+.carousel-item {
+  flex: 0 0 calc(100% / 8 - 3px); /* 8 posters per row with spacing */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
 }
 
 .carousel-dots {
@@ -159,23 +170,32 @@
 
 .top-movie-item {
   position: relative;
+  flex: 1 0 20%; /* 100% / 5 = 20% */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 240px;
+  max-width: 20%;
 }
 
 .top-movie-number {
+  position: absolute;
+  left: -40px;
+  bottom: 10px;
+  z-index: 0;
   color: #bebaba;
-  font-size: 310px;
+  font-size: 240px;
   font-family: 'League Gothic', sans-serif;
   line-height: 1;
-  opacity: 0.3;
+  opacity: 0.2;
 }
 
 .top-movie-poster {
-  position: absolute;
-  top: 61px;
-  width: 193px;
-  height: 239px;
-  object-fit: cover;
+  z-index: 1;
+  width: 160px;
+  height: 240px;
   border-radius: 8px;
+  object-fit: cover;
   transition: transform 0.2s;
 }
 
@@ -192,7 +212,7 @@
 
 .recommendation-item {
   width: 100%;
-  height: 124px;
+  height: 240px;
   border-radius: 15px;
   overflow: hidden;
   transition: transform 0.2s;
@@ -203,9 +223,11 @@
 }
 
 .recommendation-image {
-  width: 100%;
-  height: 100%;
+  width: 160px;
+  height: 240px;
   object-fit: cover;
+  border-radius: 8px;
+  transition: transform 0.2s;
 }
 
 /* Responsive Design */
@@ -236,4 +258,115 @@
   .carousel-container {
     height: 250px;
   }
+}
+
+@media (max-width: 900px) {
+  .top-movie-number {
+    font-size: 200px;
+  }
+
+  .top-movie-poster {
+    width: 120px;
+    height: 180px;
+    top: 30px;
+    left: 30px;
+  }
+
+  .top-movie-item {
+    height: 240px;
+  }
+}
+
+.carousel-section {
+  margin-top: 40px;
+}
+
+.carousel-title-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.carousel-controls {
+  display: flex;
+  gap: 12px;
+}
+
+.scroll-button {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(20, 20, 20, 0.6);
+  border: none;
+  padding: 0;
+  width: 40px;
+  height: 80px;
+  border-radius: 40px 0 0 40px;
+  cursor: pointer;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.3s ease;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.carousel-hover-group:hover .scroll-button {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.scroll-button.right {
+  right: 0;
+  border-radius: 0 40px 40px 0;
+}
+
+.scroll-button.left {
+  left: 0;
+}
+
+.scroll-button::before {
+  content: '';
+  display: inline-block;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  padding: 6px;
+  transform: rotate(135deg);
+  transition: transform 0.2s ease;
+}
+
+.scroll-button.right::before {
+  transform: rotate(-45deg);
+}
+
+.scroll-button.left::before {
+  transform: rotate(135deg);
+}
+
+.scroll-button:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* Carousel Row Style */
+.horizontal-carousel {
+  display: flex;
+  overflow: hidden;
+  gap: 24px;
+  padding-bottom: 10px;
+}
+
+.recommendation-item:hover,
+.carousel-item:hover {
+  transform: scale(1.05);
+}
+
+.carousel-hover-group {
+  position: relative;
+}
+
+.carousel-hover-group:hover .scroll-button {
+  opacity: 1;
+  pointer-events: all;
 }

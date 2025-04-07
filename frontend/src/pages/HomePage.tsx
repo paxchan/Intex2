@@ -15,6 +15,12 @@ const topMovies = [
   'The Godfather',
   'The Shawshank Redemption',
   'The Dark Knight',
+  'Fight Club',
+  'Forrest Gump',
+  'The Matrix',
+  'Goodfellas',
+  'Se7en',
+  'The Silence of the Lambs',
 ];
 
 const recommendedMovies = [
@@ -22,61 +28,86 @@ const recommendedMovies = [
   'Interstellar',
   'The Matrix',
   'Gladiator',
+  'The Prestige',
+  'Memento',
+  'The Revenant',
+  'Django Unchained',
+  'Whiplash',
+  'Parasite',
+];
+
+const trendingMovies = [
+  'Everything Everywhere All At Once',
+  'Oppenheimer',
+  'Barbie',
+  'Spider-Man: No Way Home',
+  'The Batman',
+  'No Time to Die',
+  'Dune',
+  'Black Panther: Wakanda Forever',
+  'The Super Mario Bros. Movie',
+  'Top Gun: Maverick',
+];
+
+const carousels = [
+  {
+    title: 'Top Movies',
+    movies: topMovies,
+    showNumbers: true,
+    itemsPerSlide: 5,
+  },
+  {
+    title: "We Think You'll Love These",
+    movies: recommendedMovies,
+    itemsPerSlide: 8,
+  },
+  { title: 'New & Trending', movies: trendingMovies, itemsPerSlide: 8 },
 ];
 
 export default function HomePage() {
+  const [carouselPosters, setCarouselPosters] = useState<
+    Record<string, string[]>
+  >({});
   const [currentSlide, setCurrentSlide] = useState(0);
-  const [carouselPosters, setCarouselPosters] = useState<string[]>([]);
-  const [topMoviePosters, setTopMoviePosters] = useState<string[]>([]);
-  const [recommendedPosters, setRecommendedPosters] = useState<string[]>([]);
+  const [scrollIndex, setScrollIndex] = useState<Record<string, number>>({});
 
   useEffect(() => {
-    const fetchCarouselPosters = async () => {
-      const posters = await Promise.all(
-        featuredMovies.map((title) => fetchPoster(title))
-      );
-      setCarouselPosters(posters.filter((p): p is string => p !== null));
-    };
-
-    const fetchTopPosters = async () => {
-      const posters = await Promise.all(
-        topMovies.map((title) => fetchPoster(title))
-      );
-      setTopMoviePosters(posters.filter((p): p is string => p !== null));
-    };
-
-    const fetchRecommendedPosters = async () => {
-      const posters = await Promise.all(
-        recommendedMovies.map((title) => fetchPoster(title))
-      );
-      setRecommendedPosters(posters.filter((p): p is string => p !== null));
-    };
-
-    fetchCarouselPosters();
-    fetchTopPosters();
-    fetchRecommendedPosters();
+    async function fetchAllPosters() {
+      const posters: Record<string, string[]> = {};
+      for (const carousel of carousels) {
+        const images = await Promise.all(
+          carousel.movies.map((title) => fetchPoster(title))
+        );
+        posters[carousel.title] = images.filter((img): img is string => !!img);
+      }
+      setCarouselPosters(posters);
+    }
+    fetchAllPosters();
   }, []);
 
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentSlide((prev) =>
-        prev === carouselPosters.length - 1 ? 0 : prev + 1
+        prev === featuredMovies.length - 1 ? 0 : prev + 1
       );
     }, 5000);
-
     return () => clearInterval(timer);
-  }, [carouselPosters.length]);
+  }, []);
 
-  const nextSlide = () => {
-    setCurrentSlide((prev) =>
-      prev === carouselPosters.length - 1 ? 0 : prev + 1
-    );
+  const scrollLeft = (carouselTitle: string) => {
+    setScrollIndex((prev) => ({
+      ...prev,
+      [carouselTitle]: Math.max((prev[carouselTitle] || 0) - 1, 0),
+    }));
   };
 
-  const prevSlide = () => {
-    setCurrentSlide((prev) =>
-      prev === 0 ? carouselPosters.length - 1 : prev - 1
-    );
+  const scrollRight = (carouselTitle: string, itemsPerSlide: number) => {
+    const length = carouselPosters[carouselTitle]?.length || 0;
+    const maxIndex = Math.ceil(length / itemsPerSlide) - 1;
+    setScrollIndex((prev) => ({
+      ...prev,
+      [carouselTitle]: Math.min((prev[carouselTitle] || 0) + 1, maxIndex),
+    }));
   };
 
   return (
@@ -127,100 +158,103 @@ export default function HomePage() {
           </div>
         </nav>
 
-        {/* Carousel */}
+        {/* Hero Carousel */}
         <div className="carousel-container">
-          {carouselPosters[currentSlide] && (
-            <img
-              src={carouselPosters[currentSlide]}
-              alt={`Featured: ${featuredMovies[currentSlide]}`}
-              className="carousel-image"
-            />
-          )}
+          <img
+            src={`./posters/${featuredMovies[currentSlide]}.jpg`}
+            alt={`Featured: ${featuredMovies[currentSlide]}`}
+            className="carousel-image"
+          />
           <button
             className="carousel-nav prev"
-            onClick={prevSlide}
-            aria-label="Previous slide"
+            onClick={() =>
+              setCurrentSlide(
+                currentSlide === 0
+                  ? featuredMovies.length - 1
+                  : currentSlide - 1
+              )
+            }
           >
-            <svg
-              width="40"
-              height="46"
-              viewBox="0 0 40 46"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M23.3333 34.5L13.3333 23L23.3333 11.5L25.6667 14.1833L18 23L25.6667 31.8167L23.3333 34.5Z"
-                fill="white"
-              />
-            </svg>
+            &lt;
           </button>
           <button
             className="carousel-nav next"
-            onClick={nextSlide}
-            aria-label="Next slide"
+            onClick={() =>
+              setCurrentSlide((currentSlide + 1) % featuredMovies.length)
+            }
           >
-            <svg
-              width="45"
-              height="47"
-              viewBox="0 0 45 47"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M23.625 23.5L15 14.4917L17.625 11.75L28.875 23.5L17.625 35.25L15 32.5083L23.625 23.5Z"
-                fill="white"
-              />
-            </svg>
+            &gt;
           </button>
           <div className="carousel-dots">
-            {carouselPosters.map((_, index) => (
+            {featuredMovies.map((_, index) => (
               <button
                 key={index}
                 className={`carousel-dot ${index === currentSlide ? 'active' : ''}`}
                 onClick={() => setCurrentSlide(index)}
-                aria-label={`Go to slide ${index + 1}`}
               />
             ))}
           </div>
         </div>
 
-        {/* Top Movies */}
-        <section>
-          <h2 className="section-title">Top Movies</h2>
-          <div className="top-movies-grid">
-            {topMovies.map((movie, index) => (
-              <div key={movie} className="top-movie-item">
-                <div className="top-movie-number">{index + 1}</div>
-                {topMoviePosters[index] && (
-                  <img
-                    src={topMoviePosters[index]}
-                    alt={movie}
-                    className="top-movie-poster"
-                    style={{ left: `${60 + index * 26}px` }}
-                  />
-                )}
-              </div>
-            ))}
-          </div>
-        </section>
+        {/* Dynamic Carousels */}
+        {carousels.map((carousel) => {
+          const offset = scrollIndex[carousel.title] || 0;
+          const itemsPerSlide = carousel.itemsPerSlide || 8;
+          const start = offset * itemsPerSlide;
+          const end = start + itemsPerSlide;
+          const visibleMovies = carousel.movies.slice(start, end);
 
-        {/* Recommendations */}
-        <section>
-          <h2 className="section-title">We Think You'll Love These</h2>
-          <div className="recommendations-grid">
-            {recommendedMovies.map((movie, index) => (
-              <div key={movie} className="recommendation-item">
-                {recommendedPosters[index] && (
-                  <img
-                    src={recommendedPosters[index]}
-                    alt={movie}
-                    className="recommendation-image"
-                  />
-                )}
+          return (
+            <section key={carousel.title} className="carousel-section">
+              <div className="carousel-title-bar">
+                <h2 className="section-title">{carousel.title}</h2>
               </div>
-            ))}
-          </div>
-        </section>
+              <div className="carousel-hover-group">
+                <button
+                  className="scroll-button left"
+                  onClick={() => scrollLeft(carousel.title)}
+                >
+                  &lt;
+                </button>
+                <div className="horizontal-carousel">
+                  {visibleMovies.map((title, index) => (
+                    <div
+                      key={title}
+                      className={
+                        carousel.showNumbers
+                          ? 'top-movie-item'
+                          : 'recommendation-item'
+                      }
+                    >
+                      {carousel.showNumbers && (
+                        <div className="top-movie-number">
+                          {start + index + 1}
+                        </div>
+                      )}
+                      {carouselPosters[carousel.title]?.[start + index] && (
+                        <img
+                          src={carouselPosters[carousel.title][start + index]}
+                          alt={title}
+                          className={
+                            carousel.showNumbers
+                              ? 'top-movie-poster'
+                              : 'recommendation-image'
+                          }
+                        />
+                      )}
+                    </div>
+                  ))}
+                </div>
+                <button
+                  className="scroll-button right"
+                  onClick={() => scrollRight(carousel.title, itemsPerSlide)}
+                >
+                  &gt;
+                </button>
+              </div>
+            </section>
+          );
+        })}
       </div>
     </div>
   );
