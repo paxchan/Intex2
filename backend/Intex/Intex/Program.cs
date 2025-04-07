@@ -22,6 +22,15 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("MovieConnection")));
 
+builder.Services.AddDbContext<UserRecDbContext>(options =>
+    options.UseSqlite(builder.Configuration.GetConnectionString("UserRecConnection")));
+
+builder.Services.AddDbContext<UserLikedDbContext>(options =>
+    options.UseSqlite(builder.Configuration.GetConnectionString("UserLikedConnection")));
+
+builder.Services.AddDbContext<MovieRecDbContext>(options =>
+    options.UseSqlite(builder.Configuration.GetConnectionString("MovieRecConnection")));
+
 builder.Services.AddAuthorization();
 
 builder.Services.AddIdentityApiEndpoints<IdentityUser>()
