@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import './HomePage.css';
 import fetchPoster from '../utils/fetchPoster';
+import CookieConsent from "react-cookie-consent";
 
 const featuredMovies = ['Troy', 'Joker', 'Train to Busan', 'Inception'];
 
@@ -265,6 +266,11 @@ export default function HomePage() {
             </div>
           </section>
         ))}
+      </div>
+      <div>
+      <CookieConsent>
+        This website uses cookies to enhance the user experience.
+      </CookieConsent>
       </div>
     </div>
   );
