@@ -54,8 +54,8 @@ namespace Intex.Controllers
             };
 
             // Step 3: Query the movie table to get full info on those titles
-            var recommendedMovies = _movieContext.Movie_Titles
-                .Where(m => recommendedTitles.Contains(m.Title))
+            var recommendedMovies = _savedMovieContext.movies_titles
+                .Where(m => recommendedTitles.Contains(m.title))
                 .ToList();
 
             return Ok(recommendedMovies);
@@ -65,38 +65,28 @@ namespace Intex.Controllers
         [HttpGet("MovieRec")]
         public IActionResult GetMovieRec(string movieTitle)
         {
-            // Step 1: Get the recommendation row for this movie
-            var movieRec = _movieContext.Movie_Recommendations
-                .FirstOrDefault(mr => mr.original_title == movieTitle);
+            // Step 1: Get top 10 recommended titles for the given movie
+            var recs = _movieContext.Movie_Recommendations
+                .Where(mr => mr.original_title == movieTitle)
+                .OrderByDescending(mr => mr.similarity_score)
+                .Take(10)
+                .ToList();
 
-            if (movieRec == null)
+            if (!recs.Any())
             {
                 return NotFound("No recommendations found for this title.");
             }
 
-            // Step 2: Extract all 10 recommended movie titles
-            var recommendedTitles = new List<string>
-            {
-                movieRec.Recommendation1,
-                movieRec.Recommendation2,
-                movieRec.Recommendation3,
-                movieRec.Recommendation4,
-                movieRec.Recommendation5,
-                movieRec.Recommendation6,
-                movieRec.Recommendation7,
-                movieRec.Recommendation8,
-                movieRec.Recommendation9,
-                movieRec.Recommendation10
-            };
+            // Step 2: Extract the recommended titles
+            var recommendedTitles = recs.Select(r => r.recommended_title).ToList();
 
-            // Step 3: Query the Movie_Titles table for full movie info
-            var recommendedMovies = _movieContext.Movie_Titles
+            // Step 3: Query the Movie_Titles table to get full info
+            var recommendedMovies = _savedMovieContext.movies_titles
                 .Where(m => recommendedTitles.Contains(m.title))
                 .ToList();
 
             return Ok(recommendedMovies);
         }
-
 
         [HttpGet("AllMovies")]
         public async Task<IActionResult> AllMovies([FromQuery] List<string>? movieTypes)
