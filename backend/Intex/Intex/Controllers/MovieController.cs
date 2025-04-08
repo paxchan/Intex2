@@ -91,6 +91,7 @@ namespace Intex.Controllers
         [HttpGet("AllMovies")]
         public async Task<IActionResult> AllMovies([FromQuery] List<string>? movieTypes)
         {
+
             var query = _savedMovieContext.movies_titles.AsQueryable();
 
             if (movieTypes != null && movieTypes.Any())
@@ -121,5 +122,6 @@ namespace Intex.Controllers
 
             return Ok(genreColumns);
         }
+
     }
 }
