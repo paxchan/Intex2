@@ -1,5 +1,6 @@
 import { JSX } from 'react';
 import './LandingPage.css';
+import Footer from '../components/Footer';
 
 const titles: string[] = [
   'Countdown: Inspiration4 Mission to Space',
@@ -187,6 +188,7 @@ export default function LandingPage(): JSX.Element {
           <button className="cta-button">Get Started</button>
         </form>
       </div>
+      <Footer />
     </div>
   );
 }

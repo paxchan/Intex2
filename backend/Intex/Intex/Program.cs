@@ -19,8 +19,8 @@ builder.Services.AddHttpClient();
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("IdentityConnection")));
 
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("MovieConnection")));
+builder.Services.AddDbContext<MovieDbContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("MovieConnection") /*, sqlOptions => sqlOptions.EnableRetryOnFailure()*/));
 
 builder.Services.AddDbContext<UserRecDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("UserRecConnection")));

@@ -1,19 +1,22 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.Build.ObjectModelRemoting;
 
 namespace Intex.Data
 {
     public class movie_title
     {
+        [Key]
+        [Required]
         public string show_id { get; set; }
         public string type { get; set; }
         public string title { get; set; }
-        public string director { get; set; }
-        public string cast { get; set; }
-        public string country { get; set; }
-        public string release_year { get; set; }
-        public string rating { get; set; }
-        public string duration { get; set; }
+        public string? director { get; set; }
+        public string? cast { get; set; }
+        public string? country { get; set; }
+        public int release_year { get; set; }
+        public string? rating { get; set; }
+        public string? duration { get; set; }
         public string description { get; set; }
         public int Action { get; set; }
         public int Adventure { get; set; }
@@ -51,7 +54,7 @@ namespace Intex.Data
         public int InternationalMoviesThrillers { get; set; }
         [Column("International TV Shows Romantic TV Shows TV Dramas")]
         public int InternationalTVShowsRomanticTVShowsTVDramas { get; set; }
-        [Column("Kids' TV")]
+        [Column("Kids'' TV")]
         public int KidsTV { get; set; }
         [Column("Language TV Shows")]
         public int LanguageTVShows { get; set; }
@@ -70,5 +73,7 @@ namespace Intex.Data
         [Column("Talk Shows TV Comedies")]
         public int TalkShowsTVComedies { get; set; }
         public int Thrillers { get; set; }
+
+        public ICollection<movies_rating> movies_ratings { get; set; }
     }
 }

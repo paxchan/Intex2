@@ -1,9 +1,14 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Intex.Data
 {
     public class movies_user
     {
+        internal object movies_ratings;
+
+        [Key]
+        [Required]
         public int user_id { get; set; }
         public string name { get; set; }
         public string phone { get; set; }

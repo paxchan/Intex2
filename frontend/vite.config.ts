@@ -13,7 +13,7 @@ export default defineConfig({
         "img-src 'self' data: https://image.tmdb.org; " +
         "frame-ancestors 'none'; " +
         "font-src 'self' data:; " +
-        "connect-src 'self' https://localhost:5000; " +
+        "connect-src 'self' https://localhost:5000, https://*.database.windows.net; " +
         "object-src 'none'; base-uri 'self'; form-action 'self';",
     },
   },
