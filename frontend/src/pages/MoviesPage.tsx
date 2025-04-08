@@ -54,13 +54,20 @@ function MoviesPage() {
 
   return (
     <div>
-      {loading && <p>Loading...</p>}
+      {loading}
       {error && <p>Error loading movie.</p>}
       {movie && (
         <>
           <div className="row">
             <div className="col-3">
-              <p>image here</p>
+              <img
+                src={movie.posterUrl}
+                alt={movie.title}
+                height = "300px"
+                // className={ carousel.showNumbers
+                //         ? 'top-movie-poster'
+                //       : 'recommendation-image'}
+              />
             </div>
             <div className="col-9">
               <h1>{movie.title}</h1>
