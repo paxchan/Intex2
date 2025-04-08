@@ -5,7 +5,7 @@ import CookieConsent from 'react-cookie-consent';
 import { Carousel } from '../types/Carousel';
 import getCarouselsFromGenres from '../utils/getCarouselsFromGenres';
 import TopAppBar from '../components/TopAppBar';
-const featuredMovies = ['Troy', 'Joker', 'Train to Busan', 'Inception'];
+const featuredMovies = ['darknight', 'godzilla', 'wicked', 'xmen'];
 export default function HomePage() {
   const [carousels, setCarousels] = useState<Carousel[]>([]);
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -81,7 +81,7 @@ export default function HomePage() {
         {/* Hero Carousel */}
         <div className="carousel-container">
           <img
-            src={`./posters/${featuredMovies[currentSlide]}.jpg`}
+            src={`./posters2/${featuredMovies[currentSlide]}.jpg`}
             alt={`Featured: ${featuredMovies[currentSlide]}`}
             className="carousel-image"
           />
@@ -115,6 +115,18 @@ export default function HomePage() {
             ))}
           </div>
         </div>
+
+
+           {/* CATEGORIES! */}
+           <div className="category-row">
+            {["Action", "Horror", "Comedy", "Romance", "Adventure"].map((category) => (
+              <div key={category} className="category-box">
+                {category}
+              </div>
+            ))}
+          </div>
+
+
         {/* Dynamic Carousels */}
         {carousels.map((carousel) => (
           <section key={carousel.title} className="carousel-section">
