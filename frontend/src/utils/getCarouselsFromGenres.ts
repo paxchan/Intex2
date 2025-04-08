@@ -28,10 +28,15 @@ export default async function getCarouselsFromGenres(): Promise<Carousel[]> {
 
       const movies: Movie[] = await res.json();
 
-      const moviesWithPosters = movies.map((movie) => ({
-        ...movie,
-        posterUrl: fetchPoster(movie.title),
-      }));
+      const moviesWithPosters = movies.map((movie) => {
+        const safeTitle = movie.title
+          .replace(/[:'()!.&-]/g, '') // remove colon, apostrophe, parentheses
+          .trim();
+        return {
+          ...movie,
+          posterUrl: fetchPoster(safeTitle),
+        };
+      });
 
       carousels.push({
         title: formatGenreName(genre),
