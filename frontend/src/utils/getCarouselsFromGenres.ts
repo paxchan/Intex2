@@ -30,8 +30,10 @@ export default async function getCarouselsFromGenres(): Promise<Carousel[]> {
 
       const moviesWithPosters = movies.map((movie) => {
         const safeTitle = movie.title
-          .replace(/[:'()!.&-]/g, '') // remove colon, apostrophe, parentheses
+          .normalize('NFD')
+          .replace(/[:'()’!.&-]/g, '') // remove punctuation
           .trim();
+
         return {
           ...movie,
           posterUrl: fetchPoster(safeTitle),
