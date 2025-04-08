@@ -34,8 +34,8 @@ function MoviesPage() {
       try {
         if (!movieId) return;
         setLoadingRec(true);
-        const data = await fetchRecommendedMovies(movieId);
-        setRecMovies(data);
+        const recs = await fetchRecommendedMovies(movieId);
+        setRecMovies(recs.movies);
       } catch (error: any) {
         setErrorRec(error);
         console.error('Error fetching movie:', error);
