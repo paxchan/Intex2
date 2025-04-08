@@ -42,7 +42,6 @@ export default function HomePage() {
       )
     );
   };
-
   // Scroll behavior
   const scroll = (
     carouselTitle: string,
@@ -114,7 +113,6 @@ export default function HomePage() {
             ))}
           </div>
         </div>
-
         {/* CATEGORIES! */}
         <div className="category-row">
           {['Action', 'Horror', 'Comedy', 'Romance', 'Adventure'].map(
@@ -125,11 +123,9 @@ export default function HomePage() {
             )
           )}
         </div>
-
         {/* TOP 5! */}
         {/* DON'T WORRY ABOUT THIS THING FOR NOW!! */}
         <h2 className="top10title">Top 5 in the U.S. Today</h2>
-
         <div className="top10-row">
           {[...Array(5)].map((_, index) => (
             <div className="top10-item" key={index}>
@@ -142,7 +138,6 @@ export default function HomePage() {
             </div>
           ))}
         </div>
-
         {/* Dynamic Carousels */}
         {carousels.map((carousel) => (
           <section key={carousel.title} className="carousel-section">
@@ -193,7 +188,6 @@ export default function HomePage() {
                           }
                         />
                       </Link>
-
                       // <img
                       //   src={movie.posterUrl}
                       //   alt={movie.title}
