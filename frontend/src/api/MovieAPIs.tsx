@@ -20,9 +20,9 @@ export const fetchAllMovies = async (): Promise<FetchMoviesResponse> => {
   }
 };
 
-export const fetchMovieById = async (title: string): Promise<Movie> => {
+export const fetchMovieById = async (show_id: string): Promise<Movie> => {
   try {
-    const response = await fetch(`${API_URL}/MovieDetails/${title}`);
+    const response = await fetch(`${API_URL}/MovieDetails/${show_id}`);
     if (!response.ok) {
       throw new Error('Network response was not ok');
     }
