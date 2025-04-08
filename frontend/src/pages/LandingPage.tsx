@@ -1,6 +1,8 @@
 import { JSX } from 'react';
 import './LandingPage.css';
 import Footer from '../components/Footer';
+import { useNavigate } from 'react-router-dom';
+
 
 const titles: string[] = [
   'Countdown: Inspiration4 Mission to Space',
@@ -138,6 +140,7 @@ const titles: string[] = [
 export default function LandingPage(): JSX.Element {
   const rows = 3;
   const postersPerRow = Math.ceil(titles.length / rows);
+  const navigate = useNavigate();
   const grouped = Array.from({ length: rows }, (_, i) =>
     titles.slice(i * postersPerRow, (i + 1) * postersPerRow)
   );
@@ -147,7 +150,7 @@ export default function LandingPage(): JSX.Element {
       {/* Background Carousel Grid */}
       <header className="landing-header">
         <img src="/logo.png" alt="CineNiche Logo" className="logo-top" />
-        <button className="signin-button">Sign In</button>
+        <button className="signin-button" onClick={() => navigate('/login')}>Sign In</button>
       </header>
       <div className="poster-carousel">
         {grouped.map((group, rowIndex) => (
@@ -185,7 +188,7 @@ export default function LandingPage(): JSX.Element {
             placeholder="Email address"
             className="email-input"
           />
-          <button className="cta-button">Get Started</button>
+          <button className="cta-button" onClick={() => navigate('/register')}>Get Started</button>
         </form>
         <Footer />
       </div>
