@@ -1,84 +1,77 @@
-import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
-import "./AdminPage.css";
-import fetchPoster from "../utils/fetchPoster";
-
-const actionMovies = ["1BR", "1 Mile to You", "3 Seconds Divorce", "3", "5 Flights Up"];
-const horrorMovies = ["Alone", "The Conjuring", "Black Mirror", "Bird Box", "Zombieland"];
-const comedyMovies = ["The Good Place", "The Croods", "Step Brothers", "The Waterboy", "The Smurfs"];
+import React, { useState, useEffect, useRef } from 'react';
+import { Link } from 'react-router-dom';
+import './AdminPage.css';
+import TopAppBar from '../components/TopAppBar';
+import { Carousel } from '../types/Carousel';
+import getCarouselsFromGenres from '../utils/getCarouselsFromGenres';
 
 const AdminPage: React.FC = () => {
-  const [searchTerm, setSearchTerm] = useState("");
-  const [posterMap, setPosterMap] = useState<Record<string, string>>({});
+  const [carousels, setCarousels] = useState<Carousel[]>([]);
+  const [searchTerm, setSearchTerm] = useState('');
+  const carouselRefs = useRef<Record<string, HTMLDivElement | null>>({});
 
   useEffect(() => {
-    const loadPosters = async () => {
-      const allTitles = [...actionMovies, ...horrorMovies, ...comedyMovies];
-      const posters: Record<string, string> = {};
-
-      await Promise.all(
-        allTitles.map(async (title) => {
-          const url = await fetchPoster(title);
-          if (url) posters[title] = url;
-        })
-      );
-
-      setPosterMap(posters);
-    };
-
-    loadPosters();
+    async function loadData() {
+      const fetchedCarousels = await getCarouselsFromGenres();
+      setCarousels(fetchedCarousels);
+    }
+    loadData();
   }, []);
 
-  const filterMovies = (titles: string[]) =>
-    titles.filter((title) =>
-      title.toLowerCase().includes(searchTerm.toLowerCase())
+  const handlePosterError = (carouselTitle: string, movieId: string) => {
+    setCarousels((prevCarousels) =>
+      prevCarousels.map((carousel) =>
+        carousel.title === carouselTitle
+          ? {
+              ...carousel,
+              movies: carousel.movies.filter(
+                (movie) => movie.show_id !== movieId
+              ),
+            }
+          : carousel
+      )
     );
+  };
 
-  const renderCategory = (label: string, titles: string[]) => (
-    <section className="category-section">
-      <h2 className="category-title">{label}</h2>
-      <div className="action-grid">
-        {filterMovies(titles).map((movie, index) => (
-          <div key={index} className="action-card">
-            <div className="action-image-container">
-              {posterMap[movie] ? (
-                <img
-                  src={posterMap[movie]}
-                  alt={movie}
-                  className="action-image"
-                />
-              ) : (
-                <div className="action-placeholder">Loading...</div>
-              )}
-              <div className="action-overlay">
-                <span className="action-title">{movie}</span>
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
-    </section>
-  );
+  const scroll = (
+    carouselTitle: string,
+    direction: 'left' | 'right',
+    itemsPerSlide: number
+  ) => {
+    const container = carouselRefs.current[carouselTitle];
+    if (!container) return;
+    const card = container.querySelector('div');
+    if (!card) return;
+    const cardWidth = (card as HTMLElement).offsetWidth + 24;
+    const scrollAmount = cardWidth * itemsPerSlide;
+    if (direction === 'left') {
+      if (container.scrollLeft <= 0) {
+        container.scrollTo({ left: container.scrollWidth, behavior: 'smooth' });
+      } else {
+        container.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+      }
+    } else {
+      if (
+        container.scrollLeft + container.clientWidth >=
+        container.scrollWidth - 10
+      ) {
+        container.scrollTo({ left: 0, behavior: 'smooth' });
+      } else {
+        container.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+      }
+    }
+  };
+
+  const filteredCarousels = carousels.map((carousel) => ({
+    ...carousel,
+    movies: carousel.movies.filter((movie) =>
+      movie.title.toLowerCase().includes(searchTerm.toLowerCase())
+    ),
+  }));
 
   return (
     <div className="admin-container">
-      <header className="admin-header">
-        <div className="logo">
-          <img src="/logo.png" alt="CineNiche Logo" className="logo-top" />
-        </div>
-
-        <nav className="nav-links">
-          <Link to="/home" className="nav-link">Home</Link>
-          <Link to="/movies" className="nav-link">Movies</Link>
-          <Link to="/tvshows" className="nav-link">TV Shows</Link>
-          <Link to="/watchlist" className="nav-link">Watchlist</Link>
-        </nav>
-
-        <div className="user-icon">
-          {/* user icon SVG */}
-        </div>
-      </header>
-
+      <TopAppBar />
       <main className="admin-content">
         <h1 className="admin-title">Admin Manager</h1>
 
@@ -91,18 +84,70 @@ const AdminPage: React.FC = () => {
               onChange={(e) => setSearchTerm(e.target.value)}
             />
           </div>
-          <div className="search-divider"></div>
-          <div className="filter-options">
-            <div className="filter-all">All</div>
-            <div className="filter-alphabet">
-              A B C D E F G H I J K L M N O P Q R S T U V W X Y Z
-            </div>
-          </div>
         </div>
 
-        {renderCategory("Action", actionMovies)}
-        {renderCategory("Horror", horrorMovies)}
-        {renderCategory("Comedy", comedyMovies)}
+        {filteredCarousels.map((carousel) => (
+          <section key={carousel.title} className="carousel-section">
+            <div className="carousel-title-bar">
+              <h2 className="section-title">{carousel.title}</h2>
+            </div>
+            <div className="carousel-hover-group">
+              <button
+                className="scroll-button left"
+                onClick={() =>
+                  scroll(carousel.title, 'left', carousel.itemsPerSlide)
+                }
+              />
+              <div
+                className={`horizontal-carousel ${
+                  carousel.showNumbers
+                    ? 'horizontal-carousel-top'
+                    : 'horizontal-carousel-normal'
+                }`}
+                ref={(el: HTMLDivElement | null) => {
+                  if (el) carouselRefs.current[carousel.title] = el;
+                }}
+              >
+                {carousel.movies.map((movie, index) => (
+                  <div
+                    key={movie.show_id}
+                    className={
+                      carousel.showNumbers
+                        ? 'top-movie-item'
+                        : 'recommendation-item'
+                    }
+                  >
+                    {carousel.showNumbers && (
+                      <div className="top-movie-number">{index + 1}</div>
+                    )}
+                    {movie.posterUrl && (
+                      <Link to={`/movies/${movie.show_id}`} state={{ movie }}>
+                        <img
+                          src={movie.posterUrl}
+                          alt={movie.title}
+                          onError={() =>
+                            handlePosterError(carousel.title, movie.show_id)
+                          }
+                          className={
+                            carousel.showNumbers
+                              ? 'top-movie-poster'
+                              : 'recommendation-image'
+                          }
+                        />
+                      </Link>
+                    )}
+                  </div>
+                ))}
+              </div>
+              <button
+                className="scroll-button right"
+                onClick={() =>
+                  scroll(carousel.title, 'right', carousel.itemsPerSlide)
+                }
+              />
+            </div>
+          </section>
+        ))}
       </main>
     </div>
   );

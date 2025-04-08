@@ -1,5 +1,6 @@
 using System.Text.RegularExpressions;
 using Intex.Data;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
