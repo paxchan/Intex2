@@ -3,7 +3,7 @@
 .admin-container {
   margin-left: auto;
   margin-right: auto;
-  padding-top: 47px;
+  padding-top: px;
   padding-right: 69px;
   padding-bottom: 47px;
   padding-left: 69px;
@@ -23,12 +23,11 @@
   font-size: 24px;
   width: 198px;
   height: 56px;
-  border: 1px solid #fff;
-  background-color: #d9d9d9;
   display: flex;
   align-items: center;
   justify-content: center;
   color: #000;
+
 }
 
 .logo a {
@@ -42,12 +41,10 @@
 }
 
 .nav-link {
-  width: 125px;
-  height: 23px;
-  border: 1px solid #fff;
+  width: 70px;
+  height: 10px;
   font-size: 13px;
-  color: #000;
-  background-color: #d9d9d9;
+  color: white;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -63,11 +60,13 @@
   padding-top: 50px;
 }
 
+
 .admin-title {
   font-size: 48px;
+  text-align: left;
   font-weight: 700;
   color: #fff;
-  margin-bottom: 35px;
+  margin-bottom: 10px;
   
 }
 
@@ -107,13 +106,13 @@
 .search-divider {
   height: 1px;
   background-color: #333;
-  margin: 20px 0;
+  margin: 9px 0;
 }
 
 .filter-options {
   display: flex;
-  gap: 33px;
-  font-size: 16px;
+  gap: 15px;
+  font-size: 13px;
 }
 
 .filter-all {
@@ -124,7 +123,7 @@
 
 .filter-alphabet {
   color: #8a8181;
-  letter-spacing: 4.8px;
+  letter-spacing: 5px;
 }
 
 .category-section {
@@ -133,10 +132,12 @@
 }
 
 .category-title {
-  font-size: 36px;
+  font-size: 25px;
   font-weight: 700;
+  text-align: left;
+
   color: #fff;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
 }
 
 .movie-grid {
@@ -167,4 +168,85 @@
   top: 50%;
   transform: translateY(-50%);
   cursor: pointer;
+}
+
+
+/* i added this al ultimo porque chat told me to */
+
+
+.action-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.action-card {
+  border-radius: 12px;
+  overflow: hidden;
+  background-color: transparent;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.action-content {
+  width: 100%;
+  height: 250px;
+  overflow: hidden;
+}
+
+.action-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.action-title {
+  padding: 0.5rem;
+  text-align: center;
+  font-weight: bold;
+  color: white;
+}
+
+
+.action-image-container {
+  position: relative;
+  width: 100%;
+  height: 350px; /* adjust to fit full image nicely */
+  overflow: hidden;
+  border-radius: 12px;
+}
+
+.action-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: 0.3s ease;
+}
+
+.action-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  background-color: rgba(0, 0, 0, 0); /* transparent initially */
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: 0.3s ease;
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+.action-image-container:hover .action-image {
+  filter: brightness(50%);
+}
+
+.action-image-container:hover .action-overlay {
+  background-color: rgba(0, 0, 0, 0.4);
+  opacity: 1;
 }

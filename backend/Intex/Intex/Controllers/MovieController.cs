@@ -30,6 +30,7 @@ namespace Intex.Controllers
         public IActionResult GetUserRec(int userId)
         {
             var userRec = _userContext.User_Recommendations
+            var userRec = _userContext.User_Recommendations
                 .Where(ur => ur.User == userId)
                 .ToList();
 
