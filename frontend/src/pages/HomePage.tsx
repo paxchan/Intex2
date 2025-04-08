@@ -4,11 +4,13 @@ import './HomePage.css';
 import CookieConsent from 'react-cookie-consent';
 import { Carousel } from '../types/Carousel';
 import getCarouselsFromGenres from '../utils/getCarouselsFromGenres';
+import TopAppBar from '../components/TopAppBar';
 const featuredMovies = ['Troy', 'Joker', 'Train to Busan', 'Inception'];
 export default function HomePage() {
   const [carousels, setCarousels] = useState<Carousel[]>([]);
   const [currentSlide, setCurrentSlide] = useState(0);
   const carouselRefs = useRef<Record<string, HTMLDivElement | null>>({});
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
   // Fetch carousels on load
   useEffect(() => {
     async function loadData() {
@@ -26,6 +28,22 @@ export default function HomePage() {
     }, 5000);
     return () => clearInterval(timer);
   }, []);
+  // Remove Movies without Posters
+  const handlePosterError = (carouselTitle: string, movieId: string) => {
+    setCarousels((prevCarousels) =>
+      prevCarousels.map((carousel) =>
+        carousel.title === carouselTitle
+          ? {
+              ...carousel,
+              movies: carousel.movies.filter(
+                (movie) => movie.show_id !== movieId
+              ),
+            }
+          : carousel
+      )
+    );
+  };
+
   // Scroll behavior
   const scroll = (
     carouselTitle: string,
@@ -59,49 +77,7 @@ export default function HomePage() {
     <div className="home-container">
       <div className="home-content">
         {/* Navigation */}
-        <nav className="nav-container">
-          <div className="nav-left">
-            <img src="/logo.png" alt="CineNiche Logo" className="logo" />
-            <div className="nav-links">
-              <Link to="/home" className="nav-link">
-                Home
-              </Link>
-              <Link to="/category" className="nav-link">
-                Categories
-              </Link>
-              <Link to="/tv-shows" className="nav-link">
-                TV Shows
-              </Link>
-              <Link to="/watchlist" className="nav-link">
-                Watchlist
-              </Link>
-            </div>
-          </div>
-          <div className="nav-right">
-            <input
-              type="search"
-              placeholder="Search..."
-              className="search-input"
-              aria-label="Search movies and TV shows"
-            />
-            <svg
-              width="37"
-              height="37"
-              viewBox="0 0 37 37"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-              className="user-icon"
-            >
-              <path
-                d="M30.8333 32.375V29.2917C30.8333 27.6562 30.1836 26.0876 29.0271 24.9312C27.8706 23.7747 26.3021 23.125 24.6666 23.125H12.3333C10.6978 23.125 9.12927 23.7747 7.9728 24.9312C6.81633 26.0876 6.16663 27.6562 6.16663 29.2917V32.375M24.6666 10.7917C24.6666 14.1974 21.9057 16.9583 18.5 16.9583C15.0942 16.9583 12.3333 14.1974 12.3333 10.7917C12.3333 7.38591 15.0942 4.625 18.5 4.625C21.9057 4.625 24.6666 7.38591 24.6666 10.7917Z"
-                stroke="white"
-                strokeWidth="4"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
-          </div>
-        </nav>
+        <TopAppBar />
         {/* Hero Carousel */}
         <div className="carousel-container">
           <img
@@ -179,12 +155,17 @@ export default function HomePage() {
                         <img
                           src={movie.posterUrl}
                           alt={movie.title}
-                          className={ carousel.showNumbers
-                                  ? 'top-movie-poster'
-                                : 'recommendation-image'}
+                          onError={() =>
+                            handlePosterError(carousel.title, movie.show_id)
+                          }
+                          className={
+                            carousel.showNumbers
+                              ? 'top-movie-poster'
+                              : 'recommendation-image'
+                          }
                         />
-                    </Link>
-                    
+                      </Link>
+
                       // <img
                       //   src={movie.posterUrl}
                       //   alt={movie.title}
