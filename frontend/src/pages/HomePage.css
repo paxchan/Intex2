@@ -130,16 +130,19 @@
 
 /* Carousel */
 .carousel-container {
-  width: 100%;
-  height: 349px;
-  border-radius: 15px;
-  background-color: #1c1c1c;
-  margin-bottom: 12px;
   position: relative;
+  width: 100%;
+  height: 300px;
+  border-radius: 1px;
+  background-color: #1c1c1c;
+  margin-bottom: 8px;
   display: flex;
   align-items: center;
   justify-content: center;
   overflow: hidden;
+
+  /* NEW GLOW EFFECT */
+  box-shadow: 0 0 50px rgba(255, 255, 255, 0.3); /* Light white glow */
 }
 
 .carousel-image {
