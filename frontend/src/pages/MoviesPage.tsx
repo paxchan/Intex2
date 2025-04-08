@@ -63,8 +63,36 @@ function MoviesPage() {
               <p>Cast: {movie.cast}</p>
             </div>
           </div>
+          <div className="row">
+            <div className="col-12">
+              <p>
+                {movie.release_year} | {movie.duration} | {movie.country}
+              </p>
+            </div>
+          </div>
+          <div>
+            <div>
+              <h3>Rate this movie:</h3>
+              <p>input rating logic here</p>
+            </div>
+          </div>
         </>
       )}
+      <div>
+        <h2>Recommended Movies</h2>
+        {loadingRec && <p>Loading...</p>}
+        {errorRec && <p>Error loading recommended movies.</p>}
+        {recMovies.length > 0 ? (
+          recMovies.map((movie) => (
+            <div key={movie.show_id}>
+              <h3>{movie.title}</h3>
+              <p>{movie.description}</p>
+            </div>
+          ))
+        ) : (
+          <p>No recommended movies available.</p>
+        )}
+      </div>
     </div>
   );
 }
