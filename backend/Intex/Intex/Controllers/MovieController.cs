@@ -28,7 +28,7 @@ namespace Intex.Controllers
         }
 
         [HttpGet("UserRec")]
-        public IActionResult GetUserRec(int userId)
+        public IActionResult UserRec(int userId)
         {
             // Step 1: Get the recommendations for this user
             var userRec = _userContext.User_Recommendations
@@ -64,7 +64,7 @@ namespace Intex.Controllers
 
 
         [HttpGet("MovieRec")]
-        public IActionResult GetMovieRec(string movieTitle)
+        public IActionResult MovieRec(string movieTitle)
         {
             // Step 1: Get top 10 recommended titles for the given movie
             var recs = _movieContext.Movie_Recommendations

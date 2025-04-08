@@ -1,62 +1,86 @@
 .policy-container {
-    min-height: 100vh;
-    padding: 60px 20px;
-    color: white;
-    font-family: 'Inter', sans-serif;
-  
-    /* Make the gradient scroll with the content */
-    background: linear-gradient(to right, #0e0e0e 25%, #e0c37f 100%);
-    background-attachment: scroll;
-    background-repeat: no-repeat;
-    background-size: cover;
-  }
-  
-  .policy-container h1 {
-    text-align: center;
-    font-size: 48px;
-    margin-bottom: 10px;
-  }
-  
-  .policy-container .effective-date {
-    text-align: center;
-    font-size: 16px;
-    color: #ccc;
-    margin-bottom: 40px;
-  }
-  
-  .policy-container h2 {
-    font-size: 24px;
-    margin-top: 40px;
-    margin-bottom: 10px;
-    color: white;
-    text-align: center left;
+  min-height: 100vh;
+  padding: 50px 20px 60px;
+  color: white;
+  font-family: 'Inter', sans-serif;
 
-  }
-  
-  .policy-container p,
-  .policy-container ul,
-  .policy-container li {
-    max-width: 800px;
-    margin: 0 auto 20px auto;
-    text-align: left;
-    line-height: 1.6;
-    font-size: 16px;
-  }
-  
-  .policy-container ul {
-    padding-left: 40px;
-  }
-  
-  .policy-container li {
-    margin-bottom: 10px;
-  }
-  
+  /* Vertical gradient that scrolls with content */
+  background: linear-gradient(to top, #000000 0%, #bfa76f 100%);
+  background-attachment: scroll;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
 
-  .footer {
-    text-align: center;
-    padding: 40px 20px 20px;
-    color: #ccc;
-    font-size: 14px;
-    background: transparent;
-  }
-  
+/* Page title */
+.policy-container h1 {
+  text-align: center;
+  font-size: 48px;
+  margin-bottom: 10px;
+}
+
+/* Effective date */
+.policy-container .effective-date {
+  text-align: center;
+  font-size: 16px;
+  color: #ccc;
+  margin-bottom: 40px;
+}
+
+/* Section titles */
+.policy-container h2 {
+  font-size: 24px;
+  margin-top: 40px;
+  margin-bottom: 10px;
+  color: white;
+  text-align: left; /*  removes invalid "center left" */
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Paragraphs, lists, bullets */
+.policy-container p,
+.policy-container ul,
+.policy-container li {
+  max-width: 800px;
+  margin: 0 auto 20px auto;
+  text-align: left;
+  line-height: 1.6;
+  font-size: 16px;
+}
+
+.policy-container ul {
+  padding-left: 40px;
+}
+
+.policy-container li {
+  margin-bottom: 10px;
+}
+
+/* Header override */
+.admin-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 40px;
+  background-color: black;
+  height: 60px; /* reduce the height */
+}
+
+/* Footer updated */
+.footer {
+  text-align: center;
+  padding: 40px 20px 20px;
+  color: #ccc;
+  font-size: 14px;
+  background-color: #000000; /* ✅ Black background */
+  margin-top: 80px;
+  border-top: 1px solid #444;
+}
+
+body {
+  margin: 0;
+  background: black; /* solid fallback */
+  color: white;
+  font-family: 'Inter', sans-serif;
+}

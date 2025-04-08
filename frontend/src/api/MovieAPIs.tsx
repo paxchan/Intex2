@@ -4,7 +4,7 @@ interface FetchMoviesResponse {
   movies: Movie[];
 }
 
-const API_URL = 'http://localhost:5000/api/Movie';
+const API_URL = 'https://localhost:5000/api/Movie';
 
 export const fetchAllMovies = async (): Promise<FetchMoviesResponse> => {
   try {
