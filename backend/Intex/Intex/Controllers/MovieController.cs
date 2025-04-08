@@ -64,12 +64,17 @@ namespace Intex.Controllers
 
 
         [HttpGet("MovieRec")]
-        public IActionResult MovieRec(string movieTitle)
+        public IActionResult MovieRec(string title)
         {
+            
+            if (string.IsNullOrEmpty(title))
+            {
+                return BadRequest("Title must be provided.");
+            }
             
             // Step 1: Get top 10 recommended titles for the given movie
             var recs = _movieContext.Movie_Recommendations
-                .Where(mr => mr.original_title == movieTitle)
+                .Where(mr => mr.original_title == title)
                 .OrderByDescending(mr => mr.similarity_score)
                 .Take(10)
                 .ToList();
@@ -87,7 +92,8 @@ namespace Intex.Controllers
                 .Where(m => recommendedTitles.Contains(m.title))
                 .ToList();
 
-            return Ok(recommendedMovies);
+            // Step 4: Return the movies in the expected format
+            return Ok(new { movies = recommendedMovies });
         }
 
         [HttpGet("AllMovies")]

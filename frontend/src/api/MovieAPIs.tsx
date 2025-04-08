@@ -20,20 +20,6 @@ export const fetchAllMovies = async (): Promise<FetchMoviesResponse> => {
   }
 };
 
-export const fetchMovieById = async (show_id: string): Promise<Movie> => {
-  try {
-    const response = await fetch(`${API_URL}/MovieDetails/${show_id}`);
-    if (!response.ok) {
-      throw new Error('Network response was not ok');
-    }
-    const data = await response.json();
-    return data;
-  } catch (error) {
-    console.error('Error fetching movie by ID:', error);
-    throw error;
-  }
-};
-
 export const fetchUserRecommendedMovies = async (
   userId: number
 ): Promise<FetchMoviesResponse> => {
@@ -55,7 +41,7 @@ export const fetchRecommendedMovies = async (
 ): Promise<FetchMoviesResponse> => {
   try {
     const response = await fetch(
-      `${API_URL}/MovieRec?movieTitle=${encodeURIComponent(title)}`
+      `${API_URL}/MovieRec?title=${encodeURIComponent(title)}`
     );
     if (!response.ok) {
       throw new Error('Network response was not ok');

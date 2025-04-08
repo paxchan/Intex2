@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { fetchMovieById, fetchRecommendedMovies } from '../api/MovieAPIs';
+import { fetchRecommendedMovies } from '../api/MovieAPIs';
 import { Movie } from '../types/Movie';
 // import { useParams } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
@@ -38,8 +38,9 @@ function MoviesPage() {
     fantasy: 'Fantasy',
     horrorMovies: 'Horror',
     internationalMoviesThrillers: 'International Thriller',
-    internationalTVShowsRomanticTVShowsTVDramas: 'International Romantic Dramas',
-    kidsTV: 'Kids\' TV',
+    internationalTVShowsRomanticTVShowsTVDramas:
+      'International Romantic Dramas',
+    kidsTV: "Kids' TV",
     languageTVShows: 'Language TV',
     musicals: 'Musicals',
     natureTV: 'Nature TV',
@@ -49,8 +50,8 @@ function MoviesPage() {
     tVComedies: 'TV Comedy',
     tVDramas: 'TV Drama',
     talkShowsTVComedies: 'Talk Show Comedy',
-    thrillers: 'Thriller'
-  }
+    thrillers: 'Thriller',
+  };
 
   const getGenres = (movie: any): string[] => {
     return Object.keys(genreMap)
@@ -59,19 +60,8 @@ function MoviesPage() {
   };
 
   useEffect(() => {
-    
     const loadMovie = async () => {
       setCurMovie(movie);
-    //   try {
-    //     if (!show_id) return;
-    //     setLoading(true);
-    //     const data = await fetchMovieById(show_id); // 🛠 fetch full movie
-    //     setMovie(data);
-    //   } catch (error: any) {
-    //     setError(error.message);
-    //   } finally {
-    //     setLoading(false);
-    //   }
     };
     loadMovie();
   }, []);
@@ -104,7 +94,7 @@ function MoviesPage() {
               <img
                 src={movie.posterUrl}
                 alt={movie.title}
-                height = "300px"
+                height="300px"
                 // className={ carousel.showNumbers
                 //         ? 'top-movie-poster'
                 //       : 'recommendation-image'}
@@ -120,7 +110,8 @@ function MoviesPage() {
           <div className="row">
             <div className="col-12">
               <p>
-                {movie.release_year} | {movie.duration ?? 'Unknown Duration'} | {movie.country ?? 'Country Unknown'}
+                {movie.release_year} | {movie.duration ?? 'Unknown Duration'} |{' '}
+                {movie.country ?? 'Country Unknown'}
               </p>
             </div>
             <div>
