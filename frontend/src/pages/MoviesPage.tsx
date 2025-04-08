@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { fetchRecommendedMovies } from '../api/MovieAPIs';
 import { Movie } from '../types/Movie';
 // import { useParams } from 'react-router-dom';
-import { useLocation } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 
 function MoviesPage() {
   // const { show_id, title } = useParams<{ show_id: string, title: string  }>();
@@ -12,6 +12,7 @@ function MoviesPage() {
   const [loadingRec, setLoadingRec] = useState(true);
   const [errorRec, setErrorRec] = useState(null);
   const [recMovies, setRecMovies] = useState<Movie[]>([]);
+  const [userRating, setUserRating] = useState<number | 0>(0);
   const location = useLocation();
   const { movie } = location.state || {};
   // const passedTitle = location.state?.title;
@@ -21,8 +22,9 @@ function MoviesPage() {
     action: 'Action',
     adventure: 'Adventure',
     animeSeriesInternationalTVShows: 'Anime TV Series',
-    britishTVShowsDocuseriesInternationalTVShows: 'British TV Show & International Docuseries',
-    children: 'Children\'s Movie',
+    britishTVShowsDocuseriesInternationalTVShows:
+      'British TV Show & International Docuseries',
+    children: "Children's Movie",
     comedies: 'Comedy',
     comediesDramasInternationalMovies: 'International Comedy-Drama',
     comediesInternationalMovies: 'International Comedy Film',
@@ -38,8 +40,9 @@ function MoviesPage() {
     fantasy: 'Fantasy',
     horrorMovies: 'Horror',
     internationalMoviesThrillers: 'International Thriller',
-    internationalTVShowsRomanticTVShowsTVDramas: 'International Romantic Dramas',
-    kidsTV: 'Children\'s TV',
+    internationalTVShowsRomanticTVShowsTVDramas:
+      'International Romantic Dramas',
+    kidsTV: "Children's TV",
     languageTVShows: 'Language TV Show',
     musicals: 'Musicals',
     natureTV: 'Nature Documentary',
@@ -80,7 +83,11 @@ function MoviesPage() {
       }
     };
     loadRecMovies();
-  }, []);
+  }, [movie]);
+
+  const handleRatingChange = (rating: number) => {
+    setUserRating(rating);
+  };
 
   return (
     <div>
@@ -89,15 +96,11 @@ function MoviesPage() {
       {movie && (
         <>
           <div className="row">
+            <Link to={`/home`}>
+              <button>Home</button>
+            </Link>
             <div className="col-3">
-              <img
-                src={movie.posterUrl}
-                alt={movie.title}
-                height="300px"
-                // className={ carousel.showNumbers
-                //         ? 'top-movie-poster'
-                //       : 'recommendation-image'}
-              />
+              <img src={movie.posterUrl} alt={movie.title} height="300px" />
             </div>
             <div className="col-9">
               <h1>{movie.title}</h1>
@@ -124,7 +127,25 @@ function MoviesPage() {
           <div>
             <div>
               <h3>Rate this movie:</h3>
-              <p>input rating logic here</p>
+              <div className="star-rating">
+                {[1, 2, 3, 4, 5].map((rating) => (
+                  <span
+                    key={rating}
+                    style={{
+                      fontSize: '2.5rem',
+                      cursor: 'pointer',
+                      color: userRating >= rating ? 'gold' : 'gray',
+                    }}
+                    onClick={() => handleRatingChange(rating)}
+                  >
+                    ★
+                  </span>
+                ))}
+              </div>
+              <p>Your rating: {userRating ?? 'Not Rated'}</p>
+              <button onClick={() => handleRatingSubmit(userRating)}>
+                Submit Rating
+              </button>
             </div>
           </div>
         </>
@@ -135,9 +156,15 @@ function MoviesPage() {
         {errorRec && <p>Error loading recommended movies.</p>}
         {recMovies.length > 0 ? (
           recMovies.map((movie) => (
-            <div key={movie.show_id}>
-              <img src={movie.posterUrl} alt={movie.title} height="150px" />
-            </div>
+            <Link
+              key={movie.show_id}
+              to={`/movies/${movie.show_id}`}
+              state={{ movie }}
+            >
+              <div>
+                <img src={movie.posterUrl} alt={movie.title} height="150px" />
+              </div>
+            </Link>
           ))
         ) : (
           <p>No recommended movies available.</p>
