@@ -187,8 +187,9 @@ export default function LandingPage(): JSX.Element {
           />
           <button className="cta-button">Get Started</button>
         </form>
+        <Footer />
       </div>
-      <Footer />
+      
     </div>
   );
 }
