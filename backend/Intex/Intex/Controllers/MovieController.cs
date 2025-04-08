@@ -1,5 +1,8 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Intex.Data;
+using System.Linq;
+using Microsoft.EntityFrameworkCore;
 
 namespace Intex.Controllers
 {
@@ -29,7 +32,7 @@ namespace Intex.Controllers
         [HttpGet("UserRec")]
         public IActionResult GetUserRec(int userId)
         {
-            var userRec = _movieContext.User_Recommendations
+            var userRec = _userContext.User_Recommendations
                 .Where(ur => ur.User == userId)
                 .ToList();
 
@@ -41,6 +44,8 @@ namespace Intex.Controllers
             var movieRec = _movieContext.Movie_Recommendations
                 .Where(mr => mr.original_title == movieTitle)
                 .ToList();
+
+            return Ok(movieRec);
         }
     }
 }
