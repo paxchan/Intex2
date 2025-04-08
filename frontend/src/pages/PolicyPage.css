@@ -5,7 +5,7 @@
   font-family: 'Inter', sans-serif;
 
   /* Vertical gradient that scrolls with content */
-  background: linear-gradient(to top, #000000 0%, #bfa76f 100%);
+  background: linear-gradient(to bottom, #000000 0%, #bfa76f 100%);
   background-attachment: scroll;
   background-repeat: no-repeat;
   background-size: cover;
