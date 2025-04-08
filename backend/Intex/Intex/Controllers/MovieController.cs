@@ -1,3 +1,4 @@
+using System.Text.RegularExpressions;
 using Intex.Data;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -136,6 +137,23 @@ namespace Intex.Controllers
             }
 
             return Ok(movie);
+        }
+
+        [HttpGet("GetMoviesByGenre")]
+        public async Task<IActionResult> GetMoviesByGenre(string genre, int page = 1, int pageSize = 100)
+        {
+            if (string.IsNullOrEmpty(genre)) return BadRequest("Genre is required.");
+
+            var skip = (page - 1) * pageSize;
+
+            var movies = await _savedMovieContext.movies_titles
+                .Where(m => EF.Property<int>(m, genre) == 1)
+                .Skip(skip)
+                .Take(pageSize)
+                .AsNoTracking()
+                .ToListAsync();
+
+            return Ok(movies);
         }
 
     }

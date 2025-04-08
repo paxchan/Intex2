@@ -1,86 +1,28 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import './HomePage.css';
-import fetchPoster from '../utils/fetchPoster';
 import CookieConsent from 'react-cookie-consent';
+import { Carousel } from '../types/Carousel';
+import getCarouselsFromGenres from '../utils/getCarouselsFromGenres';
 
 const featuredMovies = ['Troy', 'Joker', 'Train to Busan', 'Inception'];
 
-const topMovies = [
-  'Jeans',
-  'Minsara Kanavu',
-  'Grown Ups',
-  'Dark Skies',
-  'Paranoia',
-  'Ankahi Kahaniya',
-  'Squid Game',
-  'The Father Who Moves Mountains',
-  'The Stronghold',
-  'Birth of the Dragon',
-];
-
-const recommendedMovies = [
-  'Jaws',
-  'Dick Johnson Is Dead',
-  'Sankofa',
-  'The Starling',
-  'Je Suis Karl',
-  'Confessions of an Invisible Girl',
-  'Intrusion',
-  'Avvai Shanmughi',
-  'A Serious Man',
-  'American Son',
-];
-
-const trendingMovies = [
-  'Everything Everywhere All At Once',
-  'Oppenheimer',
-  'Barbie',
-  'Spider-Man: No Way Home',
-  'The Batman',
-  'No Time to Die',
-  'Dune',
-  'Black Panther: Wakanda Forever',
-  'The Super Mario Bros. Movie',
-  'Top Gun: Maverick',
-];
-
-const carousels = [
-  {
-    title: 'Top Movies',
-    movies: topMovies,
-    showNumbers: true,
-    itemsPerSlide: 5,
-  },
-  {
-    title: "We Think You'll Love These",
-    movies: recommendedMovies,
-    itemsPerSlide: 8,
-  },
-  { title: 'New & Trending', movies: trendingMovies, itemsPerSlide: 8 },
-];
-
 export default function HomePage() {
-  const [carouselPosters, setCarouselPosters] = useState<
-    Record<string, string[]>
-  >({});
+  const [carousels, setCarousels] = useState<Carousel[]>([]);
   const [currentSlide, setCurrentSlide] = useState(0);
   const carouselRefs = useRef<Record<string, HTMLDivElement | null>>({});
 
+  // Fetch carousels on load
   useEffect(() => {
-    async function fetchAllPosters() {
-      const posters: Record<string, string[]> = {};
-      for (const carousel of carousels) {
-        const images = await Promise.all(
-          carousel.movies.map((title) => fetchPoster(title))
-        );
-        posters[carousel.title] = images.filter((img): img is string => !!img);
-      }
-      setCarouselPosters(posters);
+    async function loadData() {
+      const fetchedCarousels = await getCarouselsFromGenres();
+      setCarousels(fetchedCarousels);
     }
-    fetchAllPosters();
+
+    loadData();
   }, []);
 
+  // Auto-slide featured carousel
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentSlide((prev) =>
@@ -90,6 +32,7 @@ export default function HomePage() {
     return () => clearInterval(timer);
   }, []);
 
+  // Scroll behavior
   const scroll = (
     carouselTitle: string,
     direction: 'left' | 'right',
@@ -101,7 +44,7 @@ export default function HomePage() {
     const card = container.querySelector('div');
     if (!card) return;
 
-    const cardWidth = (card as HTMLElement).offsetWidth + 24; // include gap
+    const cardWidth = (card as HTMLElement).offsetWidth + 24;
     const scrollAmount = cardWidth * itemsPerSlide;
 
     if (direction === 'left') {
@@ -228,12 +171,12 @@ export default function HomePage() {
                     : 'horizontal-carousel-normal'
                 }`}
                 ref={(el: HTMLDivElement | null) => {
-                  carouselRefs.current[carousel.title] = el;
+                  if (el) carouselRefs.current[carousel.title] = el;
                 }}
               >
-                {carousel.movies.map((title, index) => (
+                {carousel.movies.map((movie, index) => (
                   <div
-                    key={title}
+                    key={movie.show_id}
                     className={
                       carousel.showNumbers
                         ? 'top-movie-item'
@@ -243,21 +186,16 @@ export default function HomePage() {
                     {carousel.showNumbers && (
                       <div className="top-movie-number">{index + 1}</div>
                     )}
-                    {carouselPosters[carousel.title]?.[index] && (
-                      <Link
-                        to={`/movies/${encodeURIComponent(title)}`}
-                        state={{ title }}
-                      >
-                        <img
-                          src={carouselPosters[carousel.title][index]}
-                          alt={title}
-                          className={
-                            carousel.showNumbers
-                              ? 'top-movie-poster'
-                              : 'recommendation-image'
-                          }
-                        />
-                      </Link>
+                    {movie.posterUrl && (
+                      <img
+                        src={movie.posterUrl}
+                        alt={movie.title}
+                        className={
+                          carousel.showNumbers
+                            ? 'top-movie-poster'
+                            : 'recommendation-image'
+                        }
+                      />
                     )}
                   </div>
                 ))}
@@ -272,11 +210,10 @@ export default function HomePage() {
           </section>
         ))}
       </div>
-      <div>
-        <CookieConsent>
-          This website uses cookies to enhance the user experience.
-        </CookieConsent>
-      </div>
+
+      <CookieConsent>
+        This website uses cookies to enhance the user experience.
+      </CookieConsent>
     </div>
   );
 }
