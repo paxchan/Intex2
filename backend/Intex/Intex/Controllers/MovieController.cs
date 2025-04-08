@@ -126,10 +126,10 @@ namespace Intex.Controllers
         }
 
         [HttpGet("MovieDetails")]
-        public IActionResult MovieDetails(string movieTitle)
+        public IActionResult MovieDetails(string show_id)
         {
             var movie = _savedMovieContext.movies_titles
-                .FirstOrDefault(m => m.title == movieTitle);
+                .FirstOrDefault(m => m.title == show_id);
 
             if (movie == null)
             {
