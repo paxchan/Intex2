@@ -3,7 +3,7 @@
 .admin-container {
   margin-left: auto;
   margin-right: auto;
-  padding-top: px;
+  padding-top: 0px;
   padding-right: 69px;
   padding-bottom: 47px;
   padding-left: 69px;
@@ -57,7 +57,7 @@
 }
 
 .admin-content {
-  padding-top: 50px;
+  padding-top: 0px;
 }
 
 .admin-title {

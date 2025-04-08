@@ -12,11 +12,8 @@ function TopAppBar() {
           <Link to="/" className="nav-link-1">
             Home
           </Link>
-          <Link to="/movies" className="nav-link-1">
-            Movies
-          </Link>
-          <Link to="/tv-shows" className="nav-link-1">
-            TV Shows
+          <Link to="/category" className="nav-link-1">
+            Categories
           </Link>
           <Link to="/watchlist" className="nav-link-1">
             Watchlist

@@ -10,7 +10,6 @@ export default function HomePage() {
   const [carousels, setCarousels] = useState<Carousel[]>([]);
   const [currentSlide, setCurrentSlide] = useState(0);
   const carouselRefs = useRef<Record<string, HTMLDivElement | null>>({});
-  const [isSearchOpen, setIsSearchOpen] = useState(false);
   // Fetch carousels on load
   useEffect(() => {
     async function loadData() {
