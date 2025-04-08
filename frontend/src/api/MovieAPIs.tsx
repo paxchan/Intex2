@@ -20,9 +20,9 @@ export const fetchAllMovies = async (): Promise<FetchMoviesResponse> => {
   }
 };
 
-export const fetchMovieById = async (movieId: string): Promise<Movie> => {
+export const fetchMovieById = async (title: string): Promise<Movie> => {
   try {
-    const response = await fetch(`${API_URL}/Movie/${movieId}`);
+    const response = await fetch(`${API_URL}/MovieDetails/${title}`);
     if (!response.ok) {
       throw new Error('Network response was not ok');
     }
@@ -51,10 +51,12 @@ export const fetchUserRecommendedMovies = async (
 };
 
 export const fetchRecommendedMovies = async (
-  movieId: string
+  title: string
 ): Promise<FetchMoviesResponse> => {
   try {
-    const response = await fetch(`${API_URL}/MovieRec/${movieId}`);
+    const response = await fetch(
+      `${API_URL}/MovieRec?movieTitle=${encodeURIComponent(title)}`
+    );
     if (!response.ok) {
       throw new Error('Network response was not ok');
     }

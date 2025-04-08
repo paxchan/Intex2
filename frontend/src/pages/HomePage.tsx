@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import './HomePage.css';
 import fetchPoster from '../utils/fetchPoster';
-import CookieConsent from "react-cookie-consent";
+import CookieConsent from 'react-cookie-consent';
 
 const featuredMovies = ['Troy', 'Joker', 'Train to Busan', 'Inception'];
 
@@ -244,15 +244,20 @@ export default function HomePage() {
                       <div className="top-movie-number">{index + 1}</div>
                     )}
                     {carouselPosters[carousel.title]?.[index] && (
-                      <img
-                        src={carouselPosters[carousel.title][index]}
-                        alt={title}
-                        className={
-                          carousel.showNumbers
-                            ? 'top-movie-poster'
-                            : 'recommendation-image'
-                        }
-                      />
+                      <Link
+                        to={`/movies/${encodeURIComponent(title)}`}
+                        state={{ title }}
+                      >
+                        <img
+                          src={carouselPosters[carousel.title][index]}
+                          alt={title}
+                          className={
+                            carousel.showNumbers
+                              ? 'top-movie-poster'
+                              : 'recommendation-image'
+                          }
+                        />
+                      </Link>
                     )}
                   </div>
                 ))}
@@ -268,9 +273,9 @@ export default function HomePage() {
         ))}
       </div>
       <div>
-      <CookieConsent>
-        This website uses cookies to enhance the user experience.
-      </CookieConsent>
+        <CookieConsent>
+          This website uses cookies to enhance the user experience.
+        </CookieConsent>
       </div>
     </div>
   );

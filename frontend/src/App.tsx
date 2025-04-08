@@ -6,7 +6,7 @@ import LandingPage from './pages/LandingPage';
 import HomePage from './pages/HomePage';
 import AdminPage from './pages/AdminPage';
 import MoviesPage from './pages/MoviesPage';
-import PolicyPage from "./pages/PolicyPage";
+import PolicyPage from './pages/PolicyPage';
 
 function App() {
   return (
@@ -18,7 +18,7 @@ function App() {
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/admin" element={<AdminPage />} />
-          <Route path="/movies/:movieId" element={<MoviesPage />} />
+          <Route path="/movies/:title" element={<MoviesPage />} />
           <Route path="/policy" element={<PolicyPage />} />
         </Routes>
       </Router>

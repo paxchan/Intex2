@@ -2,26 +2,29 @@ import { useEffect, useState } from 'react';
 import { fetchMovieById, fetchRecommendedMovies } from '../api/MovieAPIs';
 import { Movie } from '../types/Movie';
 import { useParams } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 
 function MoviesPage() {
-  const { movieId } = useParams<{ movieId: string }>();
+  const { title } = useParams<{ title: string }>();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [movie, setMovie] = useState<Movie>();
   const [loadingRec, setLoadingRec] = useState(true);
   const [errorRec, setErrorRec] = useState(null);
   const [recMovies, setRecMovies] = useState<Movie[]>([]);
+  const location = useLocation();
+  const passedTitle = location.state?.title;
+  const movieTitle = title || passedTitle;
 
   useEffect(() => {
     const loadMovie = async () => {
       try {
-        if (!movieId) return;
+        if (!movieTitle) return;
         setLoading(true);
-        const data = await fetchMovieById(movieId);
+        const data = await fetchMovieById(movieTitle); // 🛠 fetch full movie
         setMovie(data);
       } catch (error: any) {
-        setError(error);
-        console.error('Error fetching movie:', error);
+        setError(error.message);
       } finally {
         setLoading(false);
       }
@@ -32,9 +35,9 @@ function MoviesPage() {
   useEffect(() => {
     const loadRecMovies = async () => {
       try {
-        if (!movieId) return;
+        if (!title) return;
         setLoadingRec(true);
-        const recs = await fetchRecommendedMovies(movieId);
+        const recs = await fetchRecommendedMovies(title);
         setRecMovies(recs.movies);
       } catch (error: any) {
         setErrorRec(error);

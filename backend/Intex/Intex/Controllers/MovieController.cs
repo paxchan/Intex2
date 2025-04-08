@@ -65,6 +65,7 @@ namespace Intex.Controllers
         [HttpGet("MovieRec")]
         public IActionResult MovieRec(string movieTitle)
         {
+            
             // Step 1: Get top 10 recommended titles for the given movie
             var recs = _movieContext.Movie_Recommendations
                 .Where(mr => mr.original_title == movieTitle)
@@ -121,6 +122,20 @@ namespace Intex.Controllers
                 .ToList();
 
             return Ok(genreColumns);
+        }
+
+        [HttpGet("MovieDetails")]
+        public IActionResult MovieDetails(string movieTitle)
+        {
+            var movie = _savedMovieContext.movies_titles
+                .FirstOrDefault(m => m.title == movieTitle);
+
+            if (movie == null)
+            {
+                return NotFound("Movie not found.");
+            }
+
+            return Ok(movie);
         }
 
     }
