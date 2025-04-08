@@ -63,11 +63,11 @@ export default function HomePage() {
           <div className="nav-left">
             <img src="/logo.png" alt="CineNiche Logo" className="logo" />
             <div className="nav-links">
-              <Link to="/" className="nav-link">
+              <Link to="/home" className="nav-link">
                 Home
               </Link>
-              <Link to="/movies" className="nav-link">
-                Movies
+              <Link to="/category" className="nav-link">
+                Categories
               </Link>
               <Link to="/tv-shows" className="nav-link">
                 TV Shows
