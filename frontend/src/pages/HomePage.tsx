@@ -4,24 +4,19 @@ import './HomePage.css';
 import CookieConsent from 'react-cookie-consent';
 import { Carousel } from '../types/Carousel';
 import getCarouselsFromGenres from '../utils/getCarouselsFromGenres';
-
 const featuredMovies = ['Troy', 'Joker', 'Train to Busan', 'Inception'];
-
 export default function HomePage() {
   const [carousels, setCarousels] = useState<Carousel[]>([]);
   const [currentSlide, setCurrentSlide] = useState(0);
   const carouselRefs = useRef<Record<string, HTMLDivElement | null>>({});
-
   // Fetch carousels on load
   useEffect(() => {
     async function loadData() {
       const fetchedCarousels = await getCarouselsFromGenres();
       setCarousels(fetchedCarousels);
     }
-
     loadData();
   }, []);
-
   // Auto-slide featured carousel
   useEffect(() => {
     const timer = setInterval(() => {
@@ -31,7 +26,6 @@ export default function HomePage() {
     }, 5000);
     return () => clearInterval(timer);
   }, []);
-
   // Scroll behavior
   const scroll = (
     carouselTitle: string,
@@ -40,13 +34,10 @@ export default function HomePage() {
   ) => {
     const container = carouselRefs.current[carouselTitle];
     if (!container) return;
-
     const card = container.querySelector('div');
     if (!card) return;
-
     const cardWidth = (card as HTMLElement).offsetWidth + 24;
     const scrollAmount = cardWidth * itemsPerSlide;
-
     if (direction === 'left') {
       if (container.scrollLeft <= 0) {
         container.scrollTo({ left: container.scrollWidth, behavior: 'smooth' });
@@ -64,7 +55,6 @@ export default function HomePage() {
       }
     }
   };
-
   return (
     <div className="home-container">
       <div className="home-content">
@@ -112,7 +102,6 @@ export default function HomePage() {
             </svg>
           </div>
         </nav>
-
         {/* Hero Carousel */}
         <div className="carousel-container">
           <img
@@ -150,7 +139,6 @@ export default function HomePage() {
             ))}
           </div>
         </div>
-
         {/* Dynamic Carousels */}
         {carousels.map((carousel) => (
           <section key={carousel.title} className="carousel-section">
@@ -210,7 +198,6 @@ export default function HomePage() {
           </section>
         ))}
       </div>
-
       <CookieConsent>
         This website uses cookies to enhance the user experience.
       </CookieConsent>
