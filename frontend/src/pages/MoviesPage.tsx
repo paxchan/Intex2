@@ -131,14 +131,13 @@ function MoviesPage() {
         </>
       )}
       <div>
-        <h2>Recommended Movies</h2>
+        <h2>Similar Movies:</h2>
         {loadingRec && <p>Loading...</p>}
         {errorRec && <p>Error loading recommended movies.</p>}
         {recMovies.length > 0 ? (
           recMovies.map((movie) => (
             <div key={movie.show_id}>
-              <h3>{movie.title}</h3>
-              <p>{movie.description}</p>
+              <img src={movie.posterUrl} alt={movie.title} height="150px" />
             </div>
           ))
         ) : (
