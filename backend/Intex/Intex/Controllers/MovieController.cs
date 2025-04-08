@@ -111,19 +111,73 @@ namespace Intex.Controllers
 
 
         [HttpGet("GetMovieTypes")]
-        public IActionResult GetMovieTypes()
+      public IActionResult GetMovieTypes()
         {
-            //exclude "release-year"
-            var excluded = new[] { "release_year" };
+    // Exclude "release-year"
+    var excluded = new[] { "release_year" };
 
-            var genreColumns = typeof(movie_title)
-                .GetProperties()
-                .Where(p => p.PropertyType == typeof(int) & !excluded.Contains(p.Name)) // assuming genre columns are int
-                .Select(p => p.Name)
-                .ToList();
+    // Define the custom order for the genres
+    var customOrder = new[]
+    {
+        "Action",
+        "Comedies",
+        "Drama",
+        "Thrillers",
+        "Documentaries",
+        "FamilyMovies",
+        "Dramas",
+        "Adventure",
+        "HorrorMovies",
+        "ComediesDramas",
+        "ComediesRomanticMovies",
+        "Fantasy",
+        "CrimeTVShows",
+        "DramasRomanticMovies",
+        "RomanticMovies",
+        "InternationalMovies",
+        "Kids'TV",
+        "AnimeSeriesInternationalTVShows",
+        "RealityTV",
+        "InternationalTVShows",
+        "Musicals",
+        "NatureTV",
+        "TVAction",
+        "ComediesInternationalMovies",
+        "ComediesDramasInternationalMovies",
+        "InternationalMoviesThrillers",
+        "LanguageTVShows",
+        "Spirituality",
+        "TalkShowsTVComedies",
+        "BritishTVShows DocuseriesInternationalTVShows",
+        "TalkShows",
+        "InternationalTVShowsRomanticTVShowsTVDramas",
+        "CrimeTVShowsDocuseries",
+        "DocumentariesInternationalMovies",
+        "Docuseries",
+        "Children"
+    };
 
-            return Ok(genreColumns);
-        }
+    // Create a dictionary for fast look-up to determine the order index of each genre
+    var genreOrderDict = customOrder
+        .Select((genre, index) => new { genre, index })
+        .ToDictionary(x => x.genre, x => x.index);
+
+    // Get the property names from the movie_title class
+    var genreColumns = typeof(movie_title)
+        .GetProperties()
+        .Where(p => p.PropertyType == typeof(int) && !excluded.Contains(p.Name)) // assuming genre columns are int
+        .Select(p => p.Name)
+        .ToList();
+
+    // Sort genre columns based on the custom order defined in genreOrderDict
+    var orderedGenreColumns = genreColumns
+        .Where(g => genreOrderDict.ContainsKey(g)) // Ensure that we only sort genres that exist in customOrder
+        .OrderBy(g => genreOrderDict[g]) // Order by the index from the genreOrderDict
+        .ToList();
+
+    return Ok(orderedGenreColumns);
+}
+
 
         [HttpGet("MovieDetails")]
         public IActionResult MovieDetails(string show_id)
