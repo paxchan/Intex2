@@ -17,6 +17,47 @@ function MoviesPage() {
   // const passedTitle = location.state?.title;
   // const movieTitle = title || passedTitle;
 
+  const genreMap: { [key: string]: string } = {
+    action: 'Action',
+    adventure: 'Adventure',
+    animeSeriesInternationalTVShows: 'Anime Series/International TV Shows',
+    britishTVShowsDocuseriesInternationalTVShows: 'British TV Show/Docuseries',
+    children: 'Children',
+    comedies: 'Comedies',
+    comediesDramasInternationalMovies: 'International Comedy/Drama',
+    comediesInternationalMovies: 'International Comedy',
+    comediesRomanticMovies: 'Romantic Comedy',
+    crimeTVShowsDocuseries: 'Crime Docuseries',
+    documentaries: 'Documentary',
+    documentariesInternationalMovies: 'International Documentary',
+    docuseries: 'Docuseries',
+    dramas: 'Drama',
+    dramasInternationalMovies: 'International Drama',
+    dramasRomanticMovies: 'Romantic Drama',
+    familyMovies: 'Family',
+    fantasy: 'Fantasy',
+    horrorMovies: 'Horror',
+    internationalMoviesThrillers: 'International Thriller',
+    internationalTVShowsRomanticTVShowsTVDramas: 'International Romantic Dramas',
+    kidsTV: 'Kids\' TV',
+    languageTVShows: 'Language TV',
+    musicals: 'Musicals',
+    natureTV: 'Nature TV',
+    realityTV: 'Reality TV',
+    spirituality: 'Spritual',
+    tVAction: 'TV Action',
+    tVComedies: 'TV Comedy',
+    tVDramas: 'TV Drama',
+    talkShowsTVComedies: 'Talk Show Comedy',
+    thrillers: 'Thriller'
+  }
+
+  const getGenres = (movie: any): string[] => {
+    return Object.keys(genreMap)
+      .filter((key) => movie[key] === 1)
+      .map((key) => genreMap[key]);
+  };
+
   useEffect(() => {
     
     const loadMovie = async () => {
@@ -72,15 +113,22 @@ function MoviesPage() {
             <div className="col-9">
               <h1>{movie.title}</h1>
               <p>{movie.description}</p>
-              <p>Director: {movie.director}</p>
-              <p>Cast: {movie.cast}</p>
+              <p>Director: {movie.director ?? 'Unknown'}</p>
+              <p>Cast: {movie.cast ?? 'Unknown'}</p>
             </div>
           </div>
           <div className="row">
             <div className="col-12">
               <p>
-                {movie.release_year} | {movie.duration} | {movie.country}
+                {movie.release_year} | {movie.duration ?? 'Unknown Duration'} | {movie.country ?? 'Country Unknown'}
               </p>
+            </div>
+            <div>
+              <p>Rating: {movie.rating ?? 'Not Rated'}</p>
+            </div>
+            <div>
+              <h2>Genres</h2>
+              <p>{getGenres(movie).join(', ') || 'Unknown'}</p>
             </div>
           </div>
           <div>
