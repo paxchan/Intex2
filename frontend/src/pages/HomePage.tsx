@@ -103,8 +103,7 @@ export default function HomePage() {
               setCurrentSlide((currentSlide + 1) % featuredMovies.length)
             }
           >
-           
- &gt;
+            &gt;
           </button>
           <div className="carousel-dots">
             {featuredMovies.map((_, index) => (
@@ -117,37 +116,33 @@ export default function HomePage() {
           </div>
         </div>
 
-
-           {/* CATEGORIES! */}
-           <div className="category-row">
-            {["Action", "Horror", "Comedy", "Romance", "Adventure"].map((category) => (
+        {/* CATEGORIES! */}
+        <div className="category-row">
+          {['Action', 'Horror', 'Comedy', 'Romance', 'Adventure'].map(
+            (category) => (
               <div key={category} className="category-box">
                 {category}
               </div>
-            ))}
-          </div>
+            )
+          )}
+        </div>
 
+        {/* TOP 5! */}
+        {/* DON'T WORRY ABOUT THIS THING FOR NOW!! */}
+        <h2 className="top10title">Top 5 in the U.S. Today</h2>
 
-          {/* TOP 5! */}
-           {/* DON'T WORRY ABOUT THIS THING FOR NOW!! */}
-          <h2 className="top10title">Top 5 in the U.S. Today</h2>
-
-          <div className="top10-row">
-            {[...Array(5)].map((_, index) => (
-              <div className="top10-item" key={index}>
-                <span className="rank-number">{index + 1}</span>
-                <img
-                  src={`./top10/movie${index + 1}.jpg`}
-                  alt={`Top ${index + 1}`}
-                  className="top10-poster"
-                />
-              </div>
-            ))}
-          </div>
-       
-
-
-
+        <div className="top10-row">
+          {[...Array(5)].map((_, index) => (
+            <div className="top10-item" key={index}>
+              <span className="rank-number">{index + 1}</span>
+              <img
+                src={`./top10/movie${index + 1}.jpg`}
+                alt={`Top ${index + 1}`}
+                className="top10-poster"
+              />
+            </div>
+          ))}
+        </div>
 
         {/* Dynamic Carousels */}
         {carousels.map((carousel) => (

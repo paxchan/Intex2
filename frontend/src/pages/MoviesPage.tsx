@@ -3,6 +3,7 @@ import { fetchRecommendedMovies } from '../api/MovieAPIs';
 import { Movie } from '../types/Movie';
 // import { useParams } from 'react-router-dom';
 import { Link, useLocation } from 'react-router-dom';
+import fetchPoster from '../utils/fetchPoster';
 
 function MoviesPage() {
   // const { show_id, title } = useParams<{ show_id: string, title: string  }>();
@@ -89,6 +90,18 @@ function MoviesPage() {
     setUserRating(rating);
   };
 
+  const recMoviesWithPosters = recMovies.map((movie) => {
+    const safeTitle = movie.title
+      .normalize('NFD')
+      .replace(/[:'()’!.&-]/g, '') // remove punctuation
+      .trim();
+
+    return {
+      ...movie,
+      posterUrl: fetchPoster(safeTitle),
+    };
+  });
+
   return (
     <div>
       {loading}
@@ -143,9 +156,9 @@ function MoviesPage() {
                 ))}
               </div>
               <p>Your rating: {userRating ?? 'Not Rated'}</p>
-              <button onClick={() => handleRatingSubmit(userRating)}>
+              {/* <button onClick={() => handleRatingSubmit(userRating)}>
                 Submit Rating
-              </button>
+              </button> */}
             </div>
           </div>
         </>
@@ -155,17 +168,19 @@ function MoviesPage() {
         {loadingRec && <p>Loading...</p>}
         {errorRec && <p>Error loading recommended movies.</p>}
         {recMovies.length > 0 ? (
-          recMovies.map((movie) => (
-            <Link
-              key={movie.show_id}
-              to={`/movies/${movie.show_id}`}
-              state={{ movie }}
-            >
-              <div>
-                <img src={movie.posterUrl} alt={movie.title} height="150px" />
-              </div>
-            </Link>
-          ))
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem' }}>
+            {recMoviesWithPosters.map((movie) => (
+              <Link
+                key={movie.show_id}
+                to={`/movies/${movie.show_id}`}
+                state={{ movie }}
+              >
+                <div>
+                  <img src={movie.posterUrl} alt={movie.title} height="150px" />
+                </div>
+              </Link>
+            ))}
+          </div>
         ) : (
           <p>No recommended movies available.</p>
         )}
