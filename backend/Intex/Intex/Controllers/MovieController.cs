@@ -29,21 +29,63 @@ namespace Intex.Controllers
         [HttpGet("UserRec")]
         public IActionResult GetUserRec(int userId)
         {
+            // Step 1: Get the recommendations for this user
             var userRec = _userContext.User_Recommendations
-            var userRec = _userContext.User_Recommendations
-                .Where(ur => ur.User == userId)
+                .FirstOrDefault(ur => ur.User == userId);
+
+            if (userRec == null)
+            {
+                return NotFound("User recommendations not found.");
+            }
+
+            // Step 2: Gather the recommended titles into a list
+            var recommendedTitles = new List<string>
+            {
+                userRec.Recommendation1,
+                userRec.Recommendation2,
+                userRec.Recommendation3,
+                userRec.Recommendation4,
+                userRec.Recommendation5,
+                userRec.Recommendation6,
+                userRec.Recommendation7,
+                userRec.Recommendation8,
+                userRec.Recommendation9,
+                userRec.Recommendation10
+            };
+
+            // Step 3: Query the movie table to get full info on those titles
+            var recommendedMovies = _savedMovieContext.movies_titles
+                .Where(m => recommendedTitles.Contains(m.title))
                 .ToList();
 
-            return Ok(userRec);
+            return Ok(recommendedMovies);
         }
+
 
         [HttpGet("MovieRec")]
         public IActionResult GetMovieRec(string movieTitle)
         {
-            var movieRec = _movieContext.Movie_Recommendations
+            // Step 1: Get top 10 recommended titles for the given movie
+            var recs = _movieContext.Movie_Recommendations
                 .Where(mr => mr.original_title == movieTitle)
+                .OrderByDescending(mr => mr.similarity_score)
+                .Take(10)
                 .ToList();
-            return Ok(movieRec);
+
+            if (!recs.Any())
+            {
+                return NotFound("No recommendations found for this title.");
+            }
+
+            // Step 2: Extract the recommended titles
+            var recommendedTitles = recs.Select(r => r.recommended_title).ToList();
+
+            // Step 3: Query the Movie_Titles table to get full info
+            var recommendedMovies = _savedMovieContext.movies_titles
+                .Where(m => recommendedTitles.Contains(m.title))
+                .ToList();
+
+            return Ok(recommendedMovies);
         }
 
         [HttpGet("AllMovies")]
