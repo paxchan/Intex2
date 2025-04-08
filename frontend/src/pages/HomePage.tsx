@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { fetchPoster } from '../utils/fetchPoster';
 import './HomePage.css';
+import fetchPoster from '../utils/fetchPoster';
 
 const featuredMovies = [
   'Avengers: Infinity War',
