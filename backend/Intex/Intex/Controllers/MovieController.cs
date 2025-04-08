@@ -110,11 +110,16 @@ namespace Intex.Controllers
         [HttpGet("GetMovieTypes")]
         public IActionResult GetMovieTypes()
         {
-            var movieTypes = _savedMovieContext.movies_titles
-                .Select(m => m.type)
-                .Distinct()
+            //exclude "release-year"
+            var excluded = new[] { "release_year" };
+
+            var genreColumns = typeof(movie_title)
+                .GetProperties()
+                .Where(p => p.PropertyType == typeof(int) & !excluded.Contains(p.Name)) // assuming genre columns are int
+                .Select(p => p.Name)
                 .ToList();
-            return Ok(movieTypes);
+
+            return Ok(genreColumns);
         }
     }
 }
