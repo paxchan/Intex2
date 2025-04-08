@@ -175,14 +175,14 @@ export default function HomePage() {
                       <div className="top-movie-number">{index + 1}</div>
                     )}
                     {movie.posterUrl && (
-                      <Link to={`/movies/${movie.show_id}/${movie.title}`}>
-                      <img
-                        src={movie.posterUrl}
-                        alt={movie.title}
-                        className={ carousel.showNumbers
-                                ? 'top-movie-poster'
-                               : 'recommendation-image'}
-                      />
+                      <Link to={`/movies/${movie.show_id}`} state={{ movie }}>
+                        <img
+                          src={movie.posterUrl}
+                          alt={movie.title}
+                          className={ carousel.showNumbers
+                                  ? 'top-movie-poster'
+                                : 'recommendation-image'}
+                        />
                     </Link>
                     
                       // <img
