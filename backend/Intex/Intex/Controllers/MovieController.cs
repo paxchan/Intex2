@@ -133,10 +133,6 @@ namespace Intex.Controllers
 
             var movies = await _savedMovieContext.movies_titles
                 .Where(m => EF.Property<int>(m, genre) == 1)
-                .Select(m => new {
-                    m.show_id,
-                    m.title
-                 })
                 .Skip(skip)
                 .Take(pageSize)
                 .AsNoTracking()
