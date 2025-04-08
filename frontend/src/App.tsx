@@ -8,7 +8,7 @@ import AdminPage from './pages/AdminPage';
 import MoviesPage from './pages/MoviesPage';
 import PolicyPage from './pages/PolicyPage';
 import Category from './pages/CategoryPage';
-// import CategoryMoviePage from './pages/CategoryMoviePage.tsx';
+import CategoryMoviePage from './pages/CategoryMoviePage.tsx';
 
 function App() {
   return (
@@ -23,7 +23,7 @@ function App() {
           <Route path="/movies/:show_id" element={<MoviesPage />} />
           <Route path="/policy" element={<PolicyPage />} />
           <Route path="/category" element={<Category />} />
-          {/* <Route path="/category/:categoryName" element={<CategoryMoviePage />} /> */}
+          <Route path="/category/:categoryName" element={<CategoryMoviePage />} />
         </Routes>
       </Router>
     </>

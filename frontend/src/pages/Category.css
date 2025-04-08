@@ -4,7 +4,6 @@
     flex-wrap: wrap;
     gap: 16px;
     padding: 24px;
-    background-color: #111; /* Optional dark background */
   }
   
   .category-box {
