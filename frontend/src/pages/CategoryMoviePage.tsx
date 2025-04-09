@@ -1,178 +1,313 @@
-import { useEffect, useRef, useState } from 'react';
-import { Link } from 'react-router-dom';
-import './HomePage.css';
-import CookieConsent from 'react-cookie-consent';
-import { Carousel } from '../types/Carousel';
-import getCarouselsFromGenres from '../utils/getCarouselsFromGenres';
+import { useEffect, useState } from 'react';
+import { Link, useParams } from 'react-router-dom';
+import { Movie } from '../types/Movie';
 import TopAppBar from '../components/TopAppBar';
-const featuredMovies = ['Troy', 'Joker', 'Train to Busan', 'Inception'];
-
+import CategoryCards from '../components/CategoryCards';
+import '../pages/CategoryMoviePage.css';
+import getMoviesOneGenre from '../utils/getMovieFromGenre';
 
 export default function CategoryMoviePage() {
-  const [carousels, setCarousels] = useState<Carousel[]>([]);
-  const [currentSlide, setCurrentSlide] = useState(0);
-  const carouselRefs = useRef<Record<string, HTMLDivElement | null>>({});
-  // Fetch carousels on load
+  const { categoryName } = useParams();
+  const [movies, setMovies] = useState<Movie[]>([]);
+
   useEffect(() => {
-    async function loadData() {
-      const fetchedCarousels = await getCarouselsFromGenres();
-      setCarousels(fetchedCarousels);
-    }
-    loadData();
-  }, []);
-  // Auto-slide featured carousel
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setCurrentSlide((prev) =>
-        prev === featuredMovies.length - 1 ? 0 : prev + 1
-      );
-    }, 5000);
-    return () => clearInterval(timer);
-  }, []);
-  // Scroll behavior
-  const scroll = (
-    carouselTitle: string,
-    direction: 'left' | 'right',
-    itemsPerSlide: number
-  ) => {
-    const container = carouselRefs.current[carouselTitle];
-    if (!container) return;
-    const card = container.querySelector('div');
-    if (!card) return;
-    const cardWidth = (card as HTMLElement).offsetWidth + 24;
-    const scrollAmount = cardWidth * itemsPerSlide;
-    if (direction === 'left') {
-      if (container.scrollLeft <= 0) {
-        container.scrollTo({ left: container.scrollWidth, behavior: 'smooth' });
-      } else {
-        container.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
-      }
-    } else {
-      if (
-        container.scrollLeft + container.clientWidth >=
-        container.scrollWidth - 10
-      ) {
-        container.scrollTo({ left: 0, behavior: 'smooth' });
-      } else {
-        container.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+    async function fetchMovies() {
+      if (categoryName) {
+        const fetchedMovies = await getMoviesOneGenre(categoryName);
+        setMovies(fetchedMovies);
       }
     }
-  };
+
+    fetchMovies();
+  }, [categoryName]); // Re-run when categoryName changes
+
   return (
-    <>
-    <TopAppBar />
-    <div className="home-container">
-      <div className="home-content">
-        {/* Hero Carousel */}
-        <div className="carousel-container">
-          <img
-            src={`./posters/${featuredMovies[currentSlide]}.jpg`}
-            alt={`Featured: ${featuredMovies[currentSlide]}`}
-            className="carousel-image"
-          />
-          <button
-            className="carousel-nav prev"
-            onClick={() =>
-              setCurrentSlide(
-                currentSlide === 0
-                  ? featuredMovies.length - 1
-                  : currentSlide - 1
-              )
-            }
-          >
-            &lt;
-          </button>
-          <button
-            className="carousel-nav next"
-            onClick={() =>
-              setCurrentSlide((currentSlide + 1) % featuredMovies.length)
-            }
-          >
-            &gt;
-          </button>
-          <div className="carousel-dots">
-            {featuredMovies.map((_, index) => (
-              <button
-                key={index}
-                className={`carousel-dot ${index === currentSlide ? 'active' : ''}`}
-                onClick={() => setCurrentSlide(index)}
-              />
+    <div>
+      <TopAppBar />
+    <h2>{categoryName}</h2>
+      <div className="home-container">
+        <div className="home-content">
+          <div className="movie-grid">
+            {movies.map((movie) => (
+              <div key={movie.show_id} className="movie-card">
+                <Link to={`/movies/${movie.show_id}`} state={{ movie }}>
+                  <img
+                    src={movie.posterUrl}
+                    alt={movie.title}
+                    className="movie-poster"
+                  />
+                  {/* <h3 className="movie-title">{movie.title}</h3> */}
+                </Link>
+              </div>
             ))}
           </div>
         </div>
-        {/* Dynamic Carousels */}
-        {carousels.map((carousel) => (
-          <section key={carousel.title} className="carousel-section">
-            <div className="carousel-title-bar">
-              <h2 className="section-title">{carousel.title}</h2>
-            </div>
-            <div className="carousel-hover-group">
-              <button
-                className="scroll-button left"
-                onClick={() =>
-                  scroll(carousel.title, 'left', carousel.itemsPerSlide)
-                }
-              />
-              <div
-                className={`horizontal-carousel ${
-                  carousel.showNumbers
-                    ? 'horizontal-carousel-top'
-                    : 'horizontal-carousel-normal'
-                }`}
-                ref={(el: HTMLDivElement | null) => {
-                  if (el) carouselRefs.current[carousel.title] = el;
-                }}
-              >
-                {carousel.movies.map((movie, index) => (
-                  <div
-                    key={movie.show_id}
-                    className={
-                      carousel.showNumbers
-                        ? 'top-movie-item'
-                        : 'recommendation-item'
-                    }
-                  >
-                    {carousel.showNumbers && (
-                      <div className="top-movie-number">{index + 1}</div>
-                    )}
-                    {movie.posterUrl && (
-                      <Link to={`/movies/${movie.show_id}`} state={{ movie }}>
-                        <img
-                          src={movie.posterUrl}
-                          alt={movie.title}
-                          className={ carousel.showNumbers
-                                  ? 'top-movie-poster'
-                                : 'recommendation-image'}
-                        />
-                    </Link>
-                    
-                      // <img
-                      //   src={movie.posterUrl}
-                      //   alt={movie.title}
-                      //   className={
-                      //     carousel.showNumbers
-                      //       ? 'top-movie-poster'
-                      //       : 'recommendation-image'
-                      //   }
-                      // />
-                    )}
-                  </div>
-                ))}
-              </div>
-              <button
-                className="scroll-button right"
-                onClick={() =>
-                  scroll(carousel.title, 'right', carousel.itemsPerSlide)
-                }
-              />
-            </div>
-          </section>
-        ))}
       </div>
-      <CookieConsent>
-        This website uses cookies to enhance the user experience.
-      </CookieConsent>
     </div>
-    </>
   );
 }
+
+
+// import { useEffect, useState } from 'react';
+// import { Link, useParams } from 'react-router-dom';
+// import { Movie } from '../types/Movie';
+// import TopAppBar from '../components/TopAppBar';
+// import CategoryCards from '../components/CategoryCards';
+// import '../pages/CategoryMoviePage.css';
+// import fetchPoster from '../utils/fetchPoster';
+// import getMoviesOneGenre from '../utils/getMovieFromGenre';
+
+// export default function CategoryMoviePage() {
+//   const { categoryName } = useParams();
+//   const [movies, setMovies] = useState<Movie[]>([]);
+
+//   useEffect(() => {
+//     async function fetchMovies() {
+//       try {
+//         const res = await fetch(
+//           `https://localhost:5000/api/Movie/GetMoviesByGenre?genre=${encodeURIComponent(categoryName || '')}&page=1&pageSize=100`
+//         );
+//         if (!res.ok) {
+//           console.warn(`Failed to fetch movies for genre: ${categoryName}`);
+//           return; // Stop further execution if the fetch fails
+//         }
+
+//         const movies: Movie[] = await res.json();
+
+//         const moviesWithPosters = movies.map((movie) => {
+//           const safeTitle = movie.title
+//             .normalize('NFD')
+//             .replace(/[:'()’!.&-]/g, '') // Remove punctuation
+//             .trim();
+
+//           return {
+//             ...movie,
+//             posterUrl: fetchPoster(safeTitle),
+//           };
+//         });
+
+//         setMovies(moviesWithPosters); // Set the fetched movies to the state
+//       } catch (error) {
+//         console.error('Error fetching movies:', error);
+//       }
+//     }
+
+//     fetchMovies();
+//   }, [categoryName]); // Re-run when categoryName changes
+
+//   return (
+//     <div>
+//       <TopAppBar />
+//       <CategoryCards />
+
+//       <div className="home-container">
+//         <div className="home-content">
+//           <div className="movie-grid">
+//             {movies.map((movie) => (
+//               <div key={movie.show_id} className="movie-card">
+//                 <Link to={`/movies/${movie.show_id}`} state={{ movie }}>
+//                   <img
+//                     src={movie.posterUrl}
+//                     alt={movie.title}
+//                     className="movie-poster"
+//                   />
+//                   <h3 className="movie-title">{movie.title}</h3>
+//                 </Link>
+//               </div>
+//             ))}
+//           </div>
+//         </div>
+//       </div>
+//     </div>
+//   );
+// }
+
+
+// import { useEffect, useState } from 'react';
+// import { Link, useParams } from 'react-router-dom';
+// import { Movie } from '../types/Movie';
+// import TopAppBar from '../components/TopAppBar';
+// import CategoryCards from '../components/CategoryCards';
+// import '../pages/CategoryMoviePage.css';
+// import fetchPoster from '../utils/fetchPoster';
+
+
+// export default function CategoryMoviePage() {
+//   const { categoryName } = useParams();
+//   const [movies, setMovies] = useState<Movie[]>([]);
+
+//   useEffect(() => {
+//     async function fetchMovies() {
+//       try {
+//             const res = await fetch(
+//               `https://localhost:5000/api/Movie/GetMoviesByGenre?genre=${encodeURIComponent(categoryName)}&page=1&pageSize=100`
+//             );
+      
+//             if (!res.ok) {
+//               console.warn(`Failed to fetch movies for genre: ${categoryName}`);
+//               continue;
+//             }
+      
+//             const movies: Movie[] = await res.json();
+      
+//             const moviesWithPosters = movies.map((movie) => {
+//               const safeTitle = movie.title
+//                 .normalize('NFD')
+//                 .replace(/[:'()’!.&-]/g, '') // remove punctuation
+//                 .trim();
+      
+//               return {
+//                 ...movie,
+//                 posterUrl: fetchPoster(safeTitle),
+//               };
+//             });
+//     fetchMovies();
+//   }, [categoryName]);
+
+//   return (
+//     <div>
+//       <TopAppBar />
+//       <CategoryCards />
+
+//       <div className="home-container">
+//         <div className="home-content">
+//           <div className="movie-grid">
+//             {movies.map((movie) => (
+//               <div key={movie.show_id} className="movie-card">
+//                 <Link to={`/movies/${movie.show_id}`} state={{ movie }}>
+//                   <img
+//                     src={movie.posterUrl}
+//                     alt={movie.title}
+//                     className="movie-poster"
+//                   />
+//                   <h3 className="movie-title">{movie.title}</h3>
+//                 </Link>
+//               </div>
+//             ))}
+//           </div>
+//         </div>
+//       </div>
+//     </div>
+//   );
+// }
+
+
+// import { useEffect, useRef, useState } from 'react';
+// import { Link } from 'react-router-dom';
+// import { Movie } from '../types/Movie';
+// import TopAppBar from '../components/TopAppBar';
+// import CategoryCards from '../components/CategoryCards';
+// import { useParams } from 'react-router-dom';
+// import fetchPoster from '../utils/fetchPoster';
+
+// const featuredMovies = ['Troy', 'Joker', 'Train to Busan', 'Inception'];
+
+
+// export default async function CategoryMoviePage() {
+//     const { categoryName } = useParams();
+//     try {
+//         const res = await fetch(
+//           `https://localhost:5000/api/Movie/GetMoviesByGenre?genre=${encodeURIComponent(categoryName || '')}&page=1&pageSize=100`
+//         );
+
+//     if (!res.ok) {
+//       console.warn(`Failed to fetch movies for genre: ${genre}`);
+//       return null;
+//     }
+
+//     const movies: Movie[] = await res.json();
+
+//     const moviesWithPosters = movies.map((movie) => {
+//       const safeTitle = movie.title
+//         .normalize('NFD')
+//         .replace(/[:'()’!.&-]/g, '') // remove punctuation
+//         .trim();
+
+//       return {
+//         ...movie,
+//         posterUrl: fetchPoster(safeTitle),
+//       };
+//     });
+
+//     return {
+//       title: formatGenreName(changeGenreName(categoryName   || '')),
+//       movies: moviesWithPosters,
+//       itemsPerSlide: 8,
+//     };
+//   } catch (error) {
+//     console.error(`Error fetching movies for genre ${categoryName}:`, error);
+//     return null;
+//   }
+
+
+// function changeGenreName(genre: string): string {
+//     switch (genre.toLowerCase()) {
+//       case 'comediesdramas':
+//         return 'Comedy-Dramas';
+//       case 'comediesromanticmovies':
+//         return 'Romantic Comedies';
+//       case 'crimetvshows':
+//         return 'Crime TV Series';
+//       case 'dramasromanticmovies':
+//         return 'Romantic Dramas';
+//       case 'romanticmovies':
+//         return 'Romantic Movies';
+//       case 'internationalmovies':
+//         return 'International Films';
+//       case "kids'tv":
+//         return "Children's TV";
+//       case 'animeseriesinternationaltvshows':
+//         return 'Anime TV Series';
+//       case 'realitytv':
+//         return 'Reality TV Shows';
+//       case 'internationaltvshows':
+//         return 'International TV Series';
+//       case 'naturetv':
+//         return 'Nature Documentaries';
+//       case 'tvaction':
+//         return 'Action TV Shows';
+//       case 'comediesinternationalmovies':
+//         return 'International Comedy Films';
+//       case 'comediesdramasinternationalmovies':
+//         return 'International Comedy-Dramas';
+//       case 'internationalmoviesthrillers':
+//         return 'International Thrillers';
+//       case 'languagetvshows':
+//         return 'Language TV Shows';
+//       case 'talkshowstvcomedies':
+//         return 'Talk Show Comedies';
+//       case 'britishtvshows docuseriesinternationaltvshows':
+//         return 'British TV Shows & International Docuseries';
+//       case 'talkshows':
+//         return 'Talk Shows';
+//       case 'internationaltvshowsromantictvshowstvdramas':
+//         return 'International TV Shows (Romantic, TV Dramas)';
+//       case 'crimetvshowsdocuseries':
+//         return 'Crime Docuseries';
+//       case 'documentariesinternationalmovies':
+//         return 'International Documentaries';
+//       case 'children':
+//         return "Children's Movies";
+//       default:
+//         return genre; // if the genre doesn't match any condition, return it unchanged
+//     }
+//   }
+
+//     function formatGenreName(genre: string): string {
+//         return genre
+//             .replace(/([a-z])([A-Z])/g, '$1 $2')
+//             .replace(/^./, (char) => char.toUpperCase());
+//     }
+
+//   return (
+//     <>
+//     <TopAppBar />
+//     <CategoryCards />
+//     <div className="home-container">
+//       <div className="home-content">
+    
+//         </div>
+//       </div>
+//     </>
+//   );
+// }

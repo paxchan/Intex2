@@ -4,12 +4,13 @@
     flex-wrap: wrap;
     gap: 16px;
     padding: 24px;
+    background-color: black;
   }
   
   .category-box {
     width: 190px;
     height: 90px;
-    background-color: #1f1f1f;
+    /* background-color: #1f1f1f; */
     color: white;
     font-size: 1.1rem;
     font-weight: bold;

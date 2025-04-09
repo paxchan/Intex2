@@ -7,7 +7,7 @@ import HomePage from './pages/HomePage';
 import AdminPage from './pages/AdminPage';
 import MoviesPage from './pages/MoviesPage';
 import PolicyPage from './pages/PolicyPage';
-import Category from './pages/CategoryPage';
+import Category from './pages/CategoryPage.tsx';
 import CategoryMoviePage from './pages/CategoryMoviePage.tsx';
 
 function App() {
