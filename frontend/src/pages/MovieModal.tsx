@@ -17,6 +17,7 @@ export default function MovieModal({
 }: MovieModalProps) {
   const [recMovies, setRecMovies] = useState<Movie[]>([]);
   const [userRating, setUserRating] = useState<number | 0>(0);
+  const [showMainPoster, setShowMainPoster] = useState(true);
 
   useEffect(() => {
     const loadRecMovies = async () => {
@@ -91,7 +92,16 @@ export default function MovieModal({
           ✕
         </button>
         <div className="modal-body">
-          <img src={movie.posterUrl} alt={movie.title} height="300px" />
+          {showMainPoster ? (
+            <img
+              src={movie.posterUrl}
+              alt={movie.title}
+              height="300px"
+              onError={() => setShowMainPoster(false)}
+            />
+          ) : (
+            <p></p>
+          )}
           <h2>{movie.title}</h2>
           <p>{movie.description}</p>
           <p>Director: {movie.director}</p>
@@ -124,9 +134,33 @@ export default function MovieModal({
               <div
                 key={rec.show_id}
                 style={{ cursor: 'pointer' }}
-                onClick={() => onMovieSelect(rec)}
+                onClick={() => {
+                  onMovieSelect(rec);
+                  setShowMainPoster(true);
+                }}
               >
-                <img src={rec.posterUrl} alt={rec.title} height="150px" />
+                <img
+                  src={rec.posterUrl}
+                  alt={rec.title}
+                  height="150px"
+                  onError={(e) => {
+                    const target = e.currentTarget;
+                    target.onerror = null; // Prevent infinite loop
+                    target.style.display = 'none';
+                    const fallbackDiv = document.createElement('div');
+                    fallbackDiv.textContent = rec.title;
+                    fallbackDiv.style.height = '150px';
+                    fallbackDiv.style.width = '100px';
+                    fallbackDiv.style.display = 'flex';
+                    fallbackDiv.style.alignItems = 'center';
+                    fallbackDiv.style.justifyContent = 'center';
+                    fallbackDiv.style.backgroundColor = '#ddd';
+                    fallbackDiv.style.color = '#333';
+                    fallbackDiv.style.fontWeight = 'bold';
+                    fallbackDiv.style.border = '1px solid #ccc';
+                    target.parentNode?.appendChild(fallbackDiv);
+                  }}
+                />
               </div>
             ))}
           </div>
