@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { Movie } from '../types/Movie';
 import TopAppBar from '../components/TopAppBar';
+import CategoryCards from '../components/CategoryCards';
 import '../pages/CategoryMoviePage.css';
 import getMoviesOneGenre from '../utils/getMovieFromGenre';
 
@@ -24,8 +25,8 @@ export default function CategoryMoviePage() {
     <div>
       <TopAppBar />
     <h2>{categoryName}</h2>
-      <div className="home-thing-1">
-        <div className="home-slice-1">
+      <div className="home-container">
+        <div className="home-content">
           <div className="movie-grid">
             {movies.map((movie) => (
               <div key={movie.show_id} className="movie-card">
