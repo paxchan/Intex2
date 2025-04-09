@@ -37,11 +37,11 @@
     cursor: pointer;
   }
   
-  /* === Poster & Banner === */
+  /* === Banner Image Area === */
   .modal-banner-wrapper {
     position: relative;
     width: 100%;
-    height: 300px;
+    height: 350px;
     overflow: hidden;
   }
   
@@ -52,54 +52,68 @@
     display: block;
   }
   
+  /* === Overlay gradient over image for fade effect === */
+  .modal-banner-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 2rem;
+    color: white;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    height: 100%;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.65), rgba(0, 0, 0, 0));
+  }
+  
+  .modal-banner-overlay h2 {
+    font-size: 2.2rem;
+    font-weight: bold;
+    text-shadow: 0px 0px 8px rgba(0, 0, 0, 0.8);
+    margin-bottom: 0.5rem;
+  }
+  
+  .modal-banner-overlay .meta {
+    font-size: 1rem;
+    color: #ccc;
+    margin-bottom: 0.75rem;
+  }
+  
+  /* This adds the fade at the bottom of the image */
   .modal-banner-gradient {
     position: absolute;
     bottom: 0;
     width: 100%;
-    height: 100px;
-    background: linear-gradient(to bottom, rgba(0, 0, 0, 0) 40%, #111 100%);
+    height: 150px;
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0) 0%, #111 100%);
     pointer-events: none;
+    z-index: 1;
   }
-  
-  /* === Play Button Over Banner === */
-  .modal-banner-content {
-    position: absolute;
-    bottom: 20px;
-    left: 24px;
-    z-index: 2;
-    color: white;
-  }
-  
-  .modal-play {
+
+
+  /* === Play Button === */
+  .modal-banner-overlay .modal-play {
     background-color: white;
     color: black;
-    padding: 10px 20px;
-    font-size: 1rem;
+    padding: 10px 24px;
     font-weight: bold;
+    font-size: 1rem;
     border-radius: 6px;
-    cursor: pointer;
     border: none;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+    cursor: pointer;
+    width: fit-content;
+    transition: background 0.3s ease;
   }
   
-  /* === Header Section === */
-  .modal-header-section {
-    padding: 20px 24px 0;
+  .modal-banner-overlay .modal-play:hover {
+    background-color: #ddd;
   }
   
-  .modal-title {
-    font-size: 2rem;
-    font-weight: 700;
-    margin-bottom: 6px;
-  }
-  
-  .modal-meta {
-    font-size: 0.95rem;
-    color: #ccc;
-  }
-  
-  /* === Two Columns Layout === */
+  /* === Columns Section === */
   .modal-columns {
+    
     display: flex;
     gap: 32px;
     flex-wrap: wrap;
@@ -131,7 +145,7 @@
   
   /* === Rating === */
   .modal-main-info h4 {
-    padding: 0 24px;
+    padding: 5px 4px 0;
     margin-top: 1.5rem;
   }
   
@@ -147,12 +161,13 @@
   }
   
   .modal-main-info > div {
-    padding: 0 24px;
+    padding: 10px 14px 0;
   }
   
   /* === Recommendations === */
   .modal-recommendations {
     padding: 16px 24px 24px;
+    text-align: center;
   }
   
   .recommendation-grid {
@@ -160,6 +175,7 @@
     justify-content: center;
     gap: 40px;
     overflow-x: auto;
+    padding-top: 12px;
   }
   
   .recommendation-item img {

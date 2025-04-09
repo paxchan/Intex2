@@ -88,29 +88,27 @@ export default function MovieModal({
         <div className="modal-banner-wrapper">
           <img className="modal-banner" src={movie.posterUrl} alt={movie.title} />
           <div className="modal-banner-gradient" />
-          <div className="modal-banner-content">
+          <div className="modal-banner-overlay">
+            <h2>{movie.title}</h2>
+            <div className="meta">
+              {movie.release_year} | {movie.duration || 'Unknown Duration'} | {movie.country || 'Unknown'} | {movie.rating || 'Unrated'}
+            </div>
             <button className="modal-play">▶ Play</button>
           </div>
         </div>
 
         <div className="modal-main-info">
-          <div className="modal-header-section">
-            <h2 className="modal-title">{movie.title}</h2>
-            <div className="modal-meta">
-              {movie.release_year} | {movie.duration || 'Unknown Duration'} | {movie.country || 'Unknown Country'} | {movie.rating || 'Unrated'}
-            </div>
-          </div>
-
           <div className="modal-columns">
             <div className="modal-left">
               <p className="modal-description">{movie.description}</p>
             </div>
             <div className="modal-right">
               <div className="meta-row">
-                <strong>Director:</strong> <span>{movie.director || 'Unknown Director'}</span>
+                <strong>Director:</strong> <span>{movie.director || 'Unknown'}</span>
               </div>
               <div className="meta-row">
-                <strong>Cast:</strong> <span>{movie.cast || 'Unknown'}</span>              </div>
+                <strong>Cast:</strong> <span>{movie.cast || 'Unknown'}</span>
+              </div>
               <div className="meta-row">
                 <strong>Genres:</strong> <span>{getGenres(movie).join(', ') || 'Unknown'}</span>
               </div>
@@ -122,11 +120,7 @@ export default function MovieModal({
             {[1, 2, 3, 4, 5].map((rating) => (
               <span
                 key={rating}
-                style={{
-                  fontSize: '2rem',
-                  cursor: 'pointer',
-                  color: userRating >= rating ? 'gold' : 'gray',
-                }}
+                className={`star ${userRating >= rating ? 'active' : ''}`}
                 onClick={() => handleRatingChange(rating)}
               >
                 ★
