@@ -15,38 +15,30 @@ namespace Intex.Controllers
         private readonly UserRecDbContext _userContext;
         private readonly UserLikedDbContext _userLikedContext;
         private readonly MovieDbContext _savedMovieContext;
-        private readonly IdentityDbContext _identityContext;
 
         public MovieController(
             MovieRecDbContext movieTemp,
             UserRecDbContext userTemp,
             UserLikedDbContext userLikedTemp,
-            MovieDbContext savedMovieTemp,
-            IdentityDbContext identityContext)
+            MovieDbContext savedMovieTemp)
         {
             _movieContext = movieTemp;
             _userContext = userTemp;
             _userLikedContext = userLikedTemp;
             _savedMovieContext = savedMovieTemp;
-            _identityContext = identityContext;
         }
 
         [HttpGet("UserRec")]
-        public IActionResult UserRec(string userName)
+        public IActionResult UserRec(int userId)
         {
             // Step 1: Get the recommendations for this user
-            var userEmail = _identityContext.AspNetUsers
-                .Where(ur => ur.UserName == userName)
-                .Select(u => u.UserName)
-                .FirstOrDefault();
-
-            var intUserId = _savedMovieContext.MoviesUsers
-                .Where(u => u.email == userEmail)
-                .Select(u => u.user_id)
-                .FirstOrDefault();
-
             var userRec = _userContext.User_Recommendations
-                .FirstOrDefault(u => u.User == intUserId);
+                .FirstOrDefault(ur => ur.User == userId);
+
+            if (userRec == null)
+            {
+                return NotFound("User recommendations not found.");
+            }
 
             // Step 2: Gather the recommended titles into a list
             var recommendedTitles = new List<string>
