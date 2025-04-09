@@ -42,7 +42,7 @@
 .nav-link-1 {
   width: 140px;
   height: 40px;
-  font-size: 15px;
+  font-size: 24px;
   color: white;
   display: flex;
   border-radius: 10px;
@@ -348,7 +348,7 @@
 }
 
 .carousel-section {
-  margin-top: 40px;
+  margin-top: 10px;
 }
 
 .carousel-title-bar {
@@ -498,7 +498,6 @@ button {
   transition: border-color 0.25s;
 }
 
-
 /* CATEGORIES CSS */
 .category-row {
   display: flex;
@@ -521,11 +520,107 @@ button {
   justify-content: center;
   border-radius: 12px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
   cursor: pointer;
 }
 
 .category-box:hover {
   transform: scale(1.05);
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.5);
+}
+
+/* TOP 10 */
+
+.top10-row {
+  display: flex;
+  gap: 100px;
+  padding: 40px 24px;
+  /* overflow-x: auto; */
+  left: -60px;
+  justify-content: center;
+}
+
+.top10-item {
+  position: relative;
+  width: 160px;
+  height: 240px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Make the number large and hanging out to the left */
+.rank-number {
+  position: absolute;
+  font-size: 200px;
+  font-weight: 900;
+  color: rgba(255, 255, 255, 0.2);
+  z-index: 0;
+  left: -60px; /* pull it out from the image */
+  top: 50%;
+  transform: translateY(-50%);
+  line-height: 1;
+  font-family: 'Impact', 'Arial Black', sans-serif;
+  pointer-events: none;
+  user-select: none;
+}
+
+/* Keep poster on top */
+.top10-poster {
+  z-index: 2;
+  position: relative;
+  width: 160px;
+  height: 240px;
+  object-fit: cover;
+  border-radius: 8px;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.6);
+  transition: transform 0.2s ease;
+}
+
+.top10-poster:hover {
+  transform: scale(1.05);
+}
+
+.top10title {
+  color: white;
+  font-size: 26px;
+  font-weight: 700;
+  margin: 40px 24px 16px;
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.75);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-content {
+  background: black;
+  max-height: 90%;
+  overflow-y: auto;
+  border-radius: 12px;
+  padding: 20px;
+  width: 80%;
+  max-width: 800px;
+  position: relative;
+}
+
+.modal-close {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  font-size: 1.5rem;
+  background: none;
+  border: none;
+  cursor: pointer;
 }

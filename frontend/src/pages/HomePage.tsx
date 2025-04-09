@@ -5,12 +5,15 @@ import CookieConsent from 'react-cookie-consent';
 import { Carousel } from '../types/Carousel';
 import getCarouselsFromGenres from '../utils/getCarouselsFromGenres';
 import TopAppBar from '../components/TopAppBar';
+import MovieModal from './MovieModal';
+import { Movie } from '../types/Movie';
+
 const featuredMovies = ['darknight', 'godzilla', 'wicked', 'xmen'];
 export default function HomePage() {
   const [carousels, setCarousels] = useState<Carousel[]>([]);
   const [currentSlide, setCurrentSlide] = useState(0);
   const carouselRefs = useRef<Record<string, HTMLDivElement | null>>({});
-  const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [selectedMovie, setSelectedMovie] = useState<Movie | null>(null);
   // Fetch carousels on load
   useEffect(() => {
     async function loadData() {
@@ -43,7 +46,6 @@ export default function HomePage() {
       )
     );
   };
-
   // Scroll behavior
   const scroll = (
     carouselTitle: string,
@@ -115,18 +117,31 @@ export default function HomePage() {
             ))}
           </div>
         </div>
-
-
-           {/* CATEGORIES! */}
-           <div className="category-row">
-            {["Action", "Horror", "Comedy", "Romance", "Adventure"].map((category) => (
+        {/* CATEGORIES! */}
+        <div className="category-row">
+          {['Action', 'Horror', 'Comedy', 'Romance', 'Adventure'].map(
+            (category) => (
               <div key={category} className="category-box">
                 {category}
               </div>
-            ))}
-          </div>
-
-
+            )
+          )}
+        </div>
+        {/* TOP 5! */}
+        {/* DON'T WORRY ABOUT THIS THING FOR NOW!! */}
+        <h2 className="top10title">Top 5 in the U.S. Today</h2>
+        <div className="top10-row">
+          {[...Array(5)].map((_, index) => (
+            <div className="top10-item" key={index}>
+              <span className="rank-number">{index + 1}</span>
+              <img
+                src={`./top10/movie${index + 1}.jpg`}
+                alt={`Top ${index + 1}`}
+                className="top10-poster"
+              />
+            </div>
+          ))}
+        </div>
         {/* Dynamic Carousels */}
         {carousels.map((carousel) => (
           <section key={carousel.title} className="carousel-section">
@@ -163,7 +178,10 @@ export default function HomePage() {
                       <div className="top-movie-number">{index + 1}</div>
                     )}
                     {movie.posterUrl && (
-                      <Link to={`/movies/${movie.show_id}`} state={{ movie }}>
+                      <div
+                        onClick={() => setSelectedMovie(movie)}
+                        style={{ cursor: 'pointer' }}
+                      >
                         <img
                           src={movie.posterUrl}
                           alt={movie.title}
@@ -176,7 +194,7 @@ export default function HomePage() {
                               : 'recommendation-image'
                           }
                         />
-                      </Link>
+                      </div>
 
                       // <img
                       //   src={movie.posterUrl}
@@ -204,6 +222,13 @@ export default function HomePage() {
       <CookieConsent>
         This website uses cookies to enhance the user experience.
       </CookieConsent>
+      {selectedMovie && (
+        <MovieModal
+          movie={selectedMovie}
+          onClose={() => setSelectedMovie(null)}
+          onMovieSelect={(newMovie) => setSelectedMovie(newMovie)}
+        />
+      )}
     </div>
   );
 }

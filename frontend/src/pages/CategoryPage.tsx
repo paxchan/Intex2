@@ -191,7 +191,7 @@ export default function CategoryPage() {
 //                                 : 'recommendation-image'}
 //                         />
 //                     </Link>
-                    
+
 //                       // <img
 //                       //   src={movie.posterUrl}
 //                       //   alt={movie.title}
