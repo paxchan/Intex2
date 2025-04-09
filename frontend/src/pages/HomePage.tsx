@@ -5,11 +5,15 @@ import CookieConsent from 'react-cookie-consent';
 import { Carousel } from '../types/Carousel';
 import getCarouselsFromGenres from '../utils/getCarouselsFromGenres';
 import TopAppBar from '../components/TopAppBar';
+import MovieModal from './MovieModal';
+import { Movie } from '../types/Movie';
+
 const featuredMovies = ['darknight', 'godzilla', 'wicked', 'xmen'];
 export default function HomePage() {
   const [carousels, setCarousels] = useState<Carousel[]>([]);
   const [currentSlide, setCurrentSlide] = useState(0);
   const carouselRefs = useRef<Record<string, HTMLDivElement | null>>({});
+  const [selectedMovie, setSelectedMovie] = useState<Movie | null>(null);
   // Fetch carousels on load
   useEffect(() => {
     async function loadData() {
@@ -174,7 +178,10 @@ export default function HomePage() {
                       <div className="top-movie-number">{index + 1}</div>
                     )}
                     {movie.posterUrl && (
-                      <Link to={`/movies/${movie.show_id}`} state={{ movie }}>
+                      <div
+                        onClick={() => setSelectedMovie(movie)}
+                        style={{ cursor: 'pointer' }}
+                      >
                         <img
                           src={movie.posterUrl}
                           alt={movie.title}
@@ -187,7 +194,8 @@ export default function HomePage() {
                               : 'recommendation-image'
                           }
                         />
-                      </Link>
+                      </div>
+
                       // <img
                       //   src={movie.posterUrl}
                       //   alt={movie.title}
@@ -214,6 +222,13 @@ export default function HomePage() {
       <CookieConsent>
         This website uses cookies to enhance the user experience.
       </CookieConsent>
+      {selectedMovie && (
+        <MovieModal
+          movie={selectedMovie}
+          onClose={() => setSelectedMovie(null)}
+          onMovieSelect={(newMovie) => setSelectedMovie(newMovie)}
+        />
+      )}
     </div>
   );
 }
