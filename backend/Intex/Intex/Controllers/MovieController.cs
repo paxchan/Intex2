@@ -77,7 +77,7 @@ namespace Intex.Controllers
             var recs = _movieContext.Movie_Recommendations
                 .Where(mr => mr.original_title == title)
                 .OrderByDescending(mr => mr.similarity_score)
-                .Take(10)
+                .Take(5)
                 .ToList();
 
             if (!recs.Any())

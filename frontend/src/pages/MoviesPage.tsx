@@ -14,6 +14,7 @@ function MoviesPage() {
   const [errorRec, setErrorRec] = useState(null);
   const [recMovies, setRecMovies] = useState<Movie[]>([]);
   const [userRating, setUserRating] = useState<number | 0>(0);
+  const [showMainPoster, setShowMainPoster] = useState(true);
   const location = useLocation();
   const { movie } = location.state || {};
   // const passedTitle = location.state?.title;
@@ -113,7 +114,16 @@ function MoviesPage() {
               <button>Home</button>
             </Link>
             <div className="col-3">
-              <img src={movie.posterUrl} alt={movie.title} height="300px" />
+              {showMainPoster ? (
+                <img
+                  src={movie.posterUrl}
+                  alt={movie.title}
+                  height="300px"
+                  onError={() => setShowMainPoster(false)}
+                />
+              ) : (
+                <p></p>
+              )}
             </div>
             <div className="col-9">
               <h1>{movie.title}</h1>
@@ -174,9 +184,34 @@ function MoviesPage() {
                 key={movie.show_id}
                 to={`/movies/${movie.show_id}`}
                 state={{ movie }}
+                onClick={() => {
+                  setCurMovie(movie);
+                  setShowMainPoster(true);
+                }}
               >
                 <div>
-                  <img src={movie.posterUrl} alt={movie.title} height="150px" />
+                  <img
+                    src={movie.posterUrl}
+                    alt={movie.title}
+                    height="150px"
+                    onError={(e) => {
+                      const target = e.currentTarget;
+                      target.onerror = null; // Prevent infinite loop
+                      target.style.display = 'none';
+                      const fallbackDiv = document.createElement('div');
+                      fallbackDiv.textContent = movie.title;
+                      fallbackDiv.style.height = '150px';
+                      fallbackDiv.style.width = '100px';
+                      fallbackDiv.style.display = 'flex';
+                      fallbackDiv.style.alignItems = 'center';
+                      fallbackDiv.style.justifyContent = 'center';
+                      fallbackDiv.style.backgroundColor = '#ddd';
+                      fallbackDiv.style.color = '#333';
+                      fallbackDiv.style.fontWeight = 'bold';
+                      fallbackDiv.style.border = '1px solid #ccc';
+                      target.parentNode?.appendChild(fallbackDiv);
+                    }}
+                  />
                 </div>
               </Link>
             ))}
